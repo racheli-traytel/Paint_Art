@@ -11,6 +11,7 @@ import Layout from './components/Layout'
 import MyMostPopularDrawings from './components/MyMostPopularDrawings'
 import PaintArtDashboard from './components/PaintArtDashboard'
 import RecyclingBinPage from './components/RecyclingBinPage'
+import ColoringPageConverter from './components/ColoringPageConverter'
 
 export const Router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ export const Router = createBrowserRouter([
         path: '/personal-area', element: <PersonalArea/>,
         children:[
           {index:true , element:<PaintArtDashboard/>},
-          { path: 'painted-drawings', element:<PaintedDrawings/> },
+          { path: 'coloring-page-converter', element:<ColoringPageConverter/>},
           { path: 'painted-drawings', element:<PaintedDrawings/> },
           { path: 'RecyclingBinPage', element:<RecyclingBinPage/> },
           { path: 'upload', element:<ArtUploader/> },

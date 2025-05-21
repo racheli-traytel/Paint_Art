@@ -80,11 +80,11 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-44EEB3IM.js";
-import "./chunk-PEBH6BBU.js";
 import {
   isObservable,
   merge
 } from "./chunk-WPM5VTLQ.js";
+import "./chunk-PEBH6BBU.js";
 import {
   BehaviorSubject,
   Subject,

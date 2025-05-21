@@ -163,6 +163,7 @@ const PersonalDashboard = () => {
                                 </Typography>
                                 <Box sx={{ flexGrow: 1 }} />
                                 <Button
+                                 onClick={()=>navigate('coloring-page-converter')}
                                     variant="contained"
                                     color="warning"
                                     startIcon={<ArrowForwardIcon />}
