@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EditUserComponent } from '../edit-user/edit-user.component';
-import { User } from '../../models/user';
+import { User } from '../../models/User';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AddUserDialogComponent } from '../add-user-dialog/add-user-dialog.component';
 

@@ -6,7 +6,7 @@ import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { User } from '../../models/user';
+import { User } from '../../models/User';
 
 @Component({
   selector: 'app-edit-user',
@@ -47,7 +47,6 @@ export class EditUserComponent {
 
   onSubmit(): void {
     console.log(this.editUserForm.value);
-    console.log("id:" + this.data.user.id);
   
     if (this.editUserForm.valid) {
       const updatedUser = {
