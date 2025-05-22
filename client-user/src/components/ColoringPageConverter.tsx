@@ -1,14 +1,30 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { Button, Box, Paper, Typography, Slider, Tabs, Tab, CircularProgress, styled, Stack } from "@mui/material"
+import { useState, useRef } from "react"
+import {
+  Button,
+  Box,
+  Paper,
+  Typography,
+  Slider,
+  CircularProgress,
+  styled,
+  Container,
+  Grid,
+  Divider,
+  IconButton,
+  Tooltip,
+  Zoom,
+} from "@mui/material"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
-import ImageIcon from "@mui/icons-material/Image"
-import CreateIcon from "@mui/icons-material/Create"
-import LineStyleIcon from "@mui/icons-material/LineStyle"
 import DownloadIcon from "@mui/icons-material/Download"
 import PrintIcon from "@mui/icons-material/Print"
+import DeleteIcon from "@mui/icons-material/Delete"
+import TuneIcon from "@mui/icons-material/Tune"
+import BrushIcon from "@mui/icons-material/Brush"
+import ImageIcon from "@mui/icons-material/Image"
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
 
 // Custom styled components
 const UploadPaper = styled(Paper)(({ theme }) => ({
@@ -18,23 +34,114 @@ const UploadPaper = styled(Paper)(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   textAlign: "center",
-  border: "2px dashed #ccc",
+  border: "2px dashed rgba(106, 17, 203, 0.3)",
   cursor: "pointer",
-  transition: "background-color 0.3s",
+  transition: "all 0.3s ease",
+  borderRadius: 16,
   "&:hover": {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "rgba(106, 17, 203, 0.05)",
+    borderColor: "rgba(106, 17, 203, 0.5)",
+    transform: "translateY(-4px)",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
   },
 }))
 
-const TabPanel = (props: { children?: React.ReactNode; value: number; index: number }) => {
-  const { children, value, index, ...other } = props
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  borderRadius: 16,
+  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-4px)",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.12)",
+  },
+}))
 
-  return (
-    <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`} {...other}>
-      {value === index && <Box sx={{ pt: 2 }}>{children}</Box>}
-    </div>
-  )
-}
+const GradientButton = styled(Button)(({ }) => ({
+  background: "linear-gradient(to right, #FF8008, #FFC837)",
+  color: "white",
+  boxShadow: "0 4px 10px rgba(255, 128, 8, 0.3)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    boxShadow: "0 6px 15px rgba(255, 128, 8, 0.4)",
+    transform: "translateY(-2px)",
+  },
+  "&.Mui-disabled": {
+    background: "linear-gradient(to right, #FFB74D, #FFE082)",
+    color: "rgba(255, 255, 255, 0.7)",
+  },
+}))
+
+const OutlineButton = styled(Button)(({ }) => ({
+  borderColor: "#6a11cb",
+  color: "#6a11cb",
+  "&:hover": {
+    backgroundColor: "rgba(106, 17, 203, 0.05)",
+    borderColor: "#6a11cb",
+  },
+}))
+
+const StyledSlider = styled(Slider)(({ }) => ({
+  color: "#6a11cb",
+  height: 8,
+  "& .MuiSlider-track": {
+    border: "none",
+    background: "linear-gradient(to right, #6a11cb, #2575fc)",
+  },
+  "& .MuiSlider-thumb": {
+    height: 24,
+    width: 24,
+    backgroundColor: "#fff",
+    border: "2px solid #6a11cb",
+    "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+      boxShadow: "0 0 0 8px rgba(106, 17, 203, 0.16)",
+    },
+    "&:before": {
+      display: "none",
+    },
+  },
+  "& .MuiSlider-valueLabel": {
+    lineHeight: 1.2,
+    fontSize: 12,
+    background: "unset",
+    padding: 0,
+    width: 32,
+    height: 32,
+    borderRadius: "50% 50% 50% 0",
+    backgroundColor: "#6a11cb",
+    transformOrigin: "bottom left",
+    transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
+    "&:before": { display: "none" },
+    "&.MuiSlider-valueLabelOpen": {
+      transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+    },
+    "& > *": {
+      transform: "rotate(45deg)",
+    },
+  },
+}))
+
+// Decorative bubble component
+const Bubble = styled("div")<{ size: number; x: number; y: number; delay: number }>(({ size, x, y, delay }) => ({
+  position: "absolute",
+  width: `${size}px`,
+  height: `${size}px`,
+  borderRadius: "50%",
+  background: "linear-gradient(135deg, rgba(106, 17, 203, 0.1), rgba(37, 117, 252, 0.05))",
+  top: `${y}%`,
+  left: `${x}%`,
+  zIndex: -1,
+  animation: `float 8s ease-in-out ${delay}s infinite`,
+  "@keyframes float": {
+    "0%, 100%": {
+      transform: "translateY(0px)",
+    },
+    "50%": {
+      transform: "translateY(-20px)",
+    },
+  },
+}))
 
 export default function ColoringPageConverter() {
   const [originalImage, setOriginalImage] = useState<string | null>(null)
@@ -44,10 +151,7 @@ export default function ColoringPageConverter() {
   const hiddenCanvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [edgeSensitivity, setEdgeSensitivity] = useState<number>(50)
-  const [detailLevel, setDetailLevel] = useState<number>(50)
-  const [contrastLevel, setContrastLevel] = useState<number>(50)
-  const [tabValue, setTabValue] = useState(0)
-  const effectTypes = ["sketch", "contour", "cartoon"]
+  const [dragActive, setDragActive] = useState(false)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -62,20 +166,44 @@ export default function ColoringPageConverter() {
     reader.readAsDataURL(file)
   }
 
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true)
+    } else if (e.type === "dragleave") {
+      setDragActive(false)
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0]
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = e.target?.result as string
+        setOriginalImage(result)
+        setColoringPage(null)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const triggerFileInput = () => {
     fileInputRef.current?.click()
   }
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue)
-  }
-
-  useEffect(() => {
-    if (originalImage && !isProcessing && coloringPage) {
-      // Auto-convert when tab changes and we have an image
-      convertToColoringPage()
+  const resetImages = () => {
+    setOriginalImage(null)
+    setColoringPage(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
-  }, [tabValue])
+  }
 
   const convertToColoringPage = () => {
     if (!originalImage || !canvasRef.current || !hiddenCanvasRef.current) return
@@ -106,26 +234,23 @@ export default function ColoringPageConverter() {
 
       // Get image data for processing
       const imageData = hiddenCtx.getImageData(0, 0, width, height)
+      const data = imageData.data
 
-      let processedImageData
-
-      // Apply the selected effect
-      switch (effectTypes[tabValue]) {
-        case "sketch":
-          processedImageData = applySketchEffect(imageData, width, height)
-          break
-        case "contour":
-          processedImageData = applyContourEffect(imageData, width, height)
-          break
-        case "cartoon":
-          processedImageData = applyCartoonEffect(imageData, width, height)
-          break
-        default:
-          processedImageData = applySketchEffect(imageData, width, height)
+      // Convert to grayscale
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = 0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2]
+        data[i] = gray
+        data[i + 1] = gray
+        data[i + 2] = gray
       }
 
+      // Apply edge detection with user-defined sensitivity
+      const edges = detectEdges(imageData, width, height, edgeSensitivity)
+
       // Draw the result on the visible canvas
-      ctx.putImageData(processedImageData, 0, 0)
+      ctx.fillStyle = "white"
+      ctx.fillRect(0, 0, width, height)
+      ctx.putImageData(edges, 0, 0)
 
       // Convert canvas to image
       setColoringPage(canvas.toDataURL("image/png"))
@@ -135,134 +260,15 @@ export default function ColoringPageConverter() {
     img.src = originalImage
   }
 
-  // Sketch effect - creates a pencil-like drawing
-  const applySketchEffect = (imageData: ImageData, width: number, height: number) => {
-    const data = imageData.data
-    const result = new ImageData(width, height)
-    const resultData = result.data
-
-    // Convert to grayscale and apply contrast
-    const contrastFactor = (259 * (contrastLevel + 255)) / (255 * (259 - contrastLevel))
-    for (let i = 0; i < data.length; i += 4) {
-      // Weighted grayscale conversion
-      const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
-
-      // Apply contrast
-      let adjusted = contrastFactor * (gray - 128) + 128
-      adjusted = Math.max(0, Math.min(255, adjusted))
-
-      // Invert for sketch effect (darker areas become lighter)
-      const inverted = 255 - adjusted
-
-      resultData[i] = inverted
-      resultData[i + 1] = inverted
-      resultData[i + 2] = inverted
-      resultData[i + 3] = 255
-    }
-
-    // Apply edge detection to enhance lines
-    const edgeData = detectEdges(imageData, width, height, edgeSensitivity, detailLevel)
-
-    // Blend the edge data with the grayscale inverted image
-    for (let i = 0; i < resultData.length; i += 4) {
-      // If there's a strong edge, make it darker
-      if (edgeData.data[i] < 100) {
-        resultData[i] = 0
-        resultData[i + 1] = 0
-        resultData[i + 2] = 0
-      }
-    }
-
-    return result
-  }
-
-  // Contour effect - focuses on outlines
-  const applyContourEffect = (imageData: ImageData, width: number, height: number) => {
-    // First, create a white background
-    const result = new ImageData(width, height)
-    const resultData = result.data
-
-    for (let i = 0; i < resultData.length; i += 4) {
-      resultData[i] = 255
-      resultData[i + 1] = 255
-      resultData[i + 2] = 255
-      resultData[i + 3] = 255
-    }
-
-    // Apply edge detection with sensitivity based on user settings
-    const edgeThreshold = 255 - edgeSensitivity * 2
-    const detailThreshold = 100 - detailLevel
-
-    // Apply Gaussian blur to reduce noise
+  // Improved edge detection with Canny-inspired approach
+  const detectEdges = (imageData: ImageData, width: number, height: number, sensitivity = 50) => {
+    // Step 1: Apply Gaussian blur to reduce noise
     const blurredData = applyGaussianBlur(imageData, width, height)
 
-    // Compute gradients (Sobel operator)
+    // Step 2: Compute gradients (Sobel operator)
     const { gradientMagnitude } = computeGradients(blurredData, width, height)
 
-    // Apply thresholding for edges
-    for (let y = 1; y < height - 1; y++) {
-      for (let x = 1; x < width - 1; x++) {
-        const idx = (y * width + x) * 4
-        const gradIdx = y * width + x
-
-        // If gradient magnitude is above threshold, draw a black pixel
-        if (gradientMagnitude[gradIdx] > edgeThreshold - detailThreshold) {
-          resultData[idx] = 0
-          resultData[idx + 1] = 0
-          resultData[idx + 2] = 0
-        }
-      }
-    }
-
-    return result
-  }
-
-  // Cartoon effect - simplifies and enhances edges
-  const applyCartoonEffect = (imageData: ImageData, width: number, height: number) => {
-    const data = imageData.data
-    const result = new ImageData(width, height)
-    const resultData = result.data
-
-    // First, apply bilateral filter to smooth colors while preserving edges
-    const smoothedData = applyBilateralFilter(imageData, width, height)
-
-    // Then, apply edge detection
-    const edgeData = detectEdges(imageData, width, height, edgeSensitivity, detailLevel)
-
-    // Combine smoothed colors with edges
-    for (let i = 0; i < data.length; i += 4) {
-      // Get smoothed color
-      const r = smoothedData.data[i]
-      const g = smoothedData.data[i + 1]
-      const b = smoothedData.data[i + 2]
-
-      // If there's an edge, make it black
-      if (edgeData.data[i] < 100) {
-        resultData[i] = 0
-        resultData[i + 1] = 0
-        resultData[i + 2] = 0
-      } else {
-        // Otherwise, use the smoothed color
-        resultData[i] = r
-        resultData[i + 1] = g
-        resultData[i + 2] = b
-      }
-
-      resultData[i + 3] = 255
-    }
-
-    return result
-  }
-
-  // Improved edge detection
-  const detectEdges = (imageData: ImageData, width: number, height: number, sensitivity = 50, detail = 50) => {
-    // Apply Gaussian blur to reduce noise
-    const blurredData = applyGaussianBlur(imageData, width, height)
-
-    // Compute gradients (Sobel operator)
-    const { gradientMagnitude } = computeGradients(blurredData, width, height)
-
-    // Apply double threshold to identify strong and weak edges
+    // Step 3: Apply double threshold to identify strong and weak edges
     const result = new ImageData(width, height)
     const resultData = result.data
 
@@ -274,9 +280,9 @@ export default function ColoringPageConverter() {
       resultData[i + 3] = 255
     }
 
-    // Adjust thresholds based on sensitivity and detail
-    const highThreshold = 150 + sensitivity
-    const lowThreshold = 50 + detail / 2
+    // Apply thresholding for edges
+    const highThreshold = sensitivity * 1.6
+    const lowThreshold = sensitivity * 0.6
 
     for (let y = 1; y < height - 1; y++) {
       for (let x = 1; x < width - 1; x++) {
@@ -389,8 +395,7 @@ export default function ColoringPageConverter() {
         for (let ky = -1; ky <= 1; ky++) {
           for (let kx = -1; kx <= 1; kx++) {
             const idx = ((y + ky) * width + (x + kx)) * 4
-            // Use average of RGB for grayscale value
-            const gray = (data[idx] + data[idx + 1] + data[idx + 2]) / 3
+            const gray = data[idx] // Already grayscale
 
             gx += gray * sobelX[ky + 1][kx + 1]
             gy += gray * sobelY[ky + 1][kx + 1]
@@ -406,304 +411,339 @@ export default function ColoringPageConverter() {
     return { gradientMagnitude, gradientDirection }
   }
 
-  // Bilateral filter for cartoon effect
-  const applyBilateralFilter = (imageData: ImageData, width: number, height: number) => {
-    const data = imageData.data
-    const result = new Uint8ClampedArray(data.length)
-
-    // Copy alpha channel
-    for (let i = 3; i < data.length; i += 4) {
-      result[i] = 255
-    }
-
-    const sigmaSpace = 3.0
-    const sigmaColor = 50.0
-    const radius = Math.ceil(sigmaSpace * 2)
-
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const idx = (y * width + x) * 4
-
-        let sumR = 0,
-          sumG = 0,
-          sumB = 0
-        let totalWeight = 0
-
-        // Center pixel values
-        const centerR = data[idx]
-        const centerG = data[idx + 1]
-        const centerB = data[idx + 2]
-
-        // Process neighborhood
-        for (let ny = Math.max(0, y - radius); ny <= Math.min(height - 1, y + radius); ny++) {
-          for (let nx = Math.max(0, x - radius); nx <= Math.min(width - 1, x + radius); nx++) {
-            const nidx = (ny * width + nx) * 4
-
-            // Spatial distance
-            const spatialDist = Math.sqrt((nx - x) ** 2 + (ny - y) ** 2)
-
-            // Color distance
-            const colorDist = Math.sqrt(
-              (centerR - data[nidx]) ** 2 + (centerG - data[nidx + 1]) ** 2 + (centerB - data[nidx + 2]) ** 2,
-            )
-
-            // Calculate weight
-            const spatialWeight = Math.exp(-(spatialDist ** 2) / (2 * sigmaSpace ** 2))
-            const colorWeight = Math.exp(-(colorDist ** 2) / (2 * sigmaColor ** 2))
-            const weight = spatialWeight * colorWeight
-
-            // Accumulate weighted values
-            sumR += data[nidx] * weight
-            sumG += data[nidx + 1] * weight
-            sumB += data[nidx + 2] * weight
-            totalWeight += weight
-          }
-        }
-
-        // Normalize and set result
-        result[idx] = Math.round(sumR / totalWeight)
-        result[idx + 1] = Math.round(sumG / totalWeight)
-        result[idx + 2] = Math.round(sumB / totalWeight)
-      }
-    }
-
-    return new ImageData(result, width, height)
-  }
-
   return (
-    <Box sx={{ maxWidth: 800, margin: "0 auto", padding: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
-        הפוך תמונה לדף צביעה
-      </Typography>
+    <Container maxWidth="lg" sx={{ position: "relative", overflow: "hidden", py: 4 }}>
+      {/* Decorative bubbles */}
+      <Bubble size={120} x={10} y={20} delay={1} />
+      <Bubble size={80} x={80} y={60} delay={2} />
+      <Bubble size={150} x={70} y={25} delay={0} />
+      <Bubble size={60} x={20} y={70} delay={3} />
 
-      <UploadPaper
-        elevation={3}
-        sx={{
-          backgroundColor: originalImage ? "transparent" : "#f8f8f8",
-        }}
-        onClick={triggerFileInput}
-      >
-        <input type="file" accept="image/*" hidden onChange={handleImageUpload} ref={fileInputRef} />
+      <Box sx={{ textAlign: "center", mb: 4, position: "relative" }}>
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
+            fontWeight: "bold",
+            mb: 1,
+            background: "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          המרת תמונות לדפי צביעה
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
+          העלה תמונה והפוך אותה לדף צביעה מותאם אישית בקלות
+        </Typography>
+        <Divider
+          sx={{
+            width: "100px",
+            mx: "auto",
+            borderColor: "rgba(106, 17, 203, 0.2)",
+            borderWidth: 2,
+            borderRadius: 2,
+          }}
+        />
+      </Box>
 
-        {!originalImage ? (
-          <Box sx={{ py: 5 }}>
-            <CloudUploadIcon sx={{ fontSize: 48, color: "text.secondary" }} />
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              לחץ כאן להעלאת תמונה
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              או גרור תמונה לכאן
-            </Typography>
-          </Box>
-        ) : (
-          <Box sx={{ width: "100%" }}>
-            <Typography variant="subtitle1" gutterBottom>
-              התמונה המקורית
-            </Typography>
-            <img
-              src={originalImage || "/placeholder.svg"}
-              alt="Original"
-              style={{ maxWidth: "100%", maxHeight: "300px" }}
-            />
-          </Box>
-        )}
-      </UploadPaper>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <UploadPaper
+            elevation={3}
+            sx={{
+              backgroundColor: originalImage ? "transparent" : "rgba(245, 247, 250, 0.7)",
+              borderStyle: dragActive ? "solid" : "dashed",
+              borderColor: dragActive ? "#6a11cb" : "rgba(106, 17, 203, 0.3)",
+              height: "100%",
+            }}
+            onClick={triggerFileInput}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <input type="file" accept="image/*" hidden onChange={handleImageUpload} ref={fileInputRef} />
 
-      {originalImage && (
-        <Box sx={{ mb: 3 }}>
-          <Paper elevation={3} sx={{ p: 3 }}>
-            <Tabs
-              value={tabValue}
-              onChange={handleTabChange}
-              variant="fullWidth"
-              indicatorColor="primary"
-              textColor="primary"
-              aria-label="effect tabs"
-            >
-              <Tab
-                icon={<CreateIcon />}
-                label="סקיצה"
-                id="tab-0"
-                aria-controls="tabpanel-0"
-                sx={{ flexDirection: "row", gap: 1 }}
-              />
-              <Tab
-                icon={<LineStyleIcon />}
-                label="קווי מתאר"
-                id="tab-1"
-                aria-controls="tabpanel-1"
-                sx={{ flexDirection: "row", gap: 1 }}
-              />
-              <Tab
-                icon={<ImageIcon />}
-                label="קומיקס"
-                id="tab-2"
-                aria-controls="tabpanel-2"
-                sx={{ flexDirection: "row", gap: 1 }}
-              />
-            </Tabs>
-
-            <TabPanel value={tabValue} index={0}>
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="edge-sensitivity-label" variant="body2">
-                    רגישות קווים
-                  </Typography>
-                  <Typography variant="body2">{edgeSensitivity}</Typography>
+            {!originalImage ? (
+              <Box sx={{ py: 5, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "linear-gradient(135deg, rgba(106, 17, 203, 0.1), rgba(37, 117, 252, 0.05))",
+                    mb: 2,
+                  }}
+                >
+                  <CloudUploadIcon sx={{ fontSize: 40, color: "#6a11cb" }} />
                 </Box>
-                <Slider
+                <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold", color: "#333" }}>
+                  לחץ כאן להעלאת תמונה
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  או גרור תמונה לכאן
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ mt: 3, maxWidth: "80%" }}>
+                  תומך בפורמטים: JPG, PNG, GIF
+                </Typography>
+              </Box>
+            ) : (
+              <Box sx={{ width: "100%", position: "relative" }}>
+                <Box sx={{ position: "absolute", top: 10, right: 10, zIndex: 2 }}>
+                  <Tooltip title="הסר תמונה">
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        resetImages()
+                      }}
+                      sx={{
+                        bgcolor: "rgba(255,255,255,0.8)",
+                        "&:hover": { bgcolor: "rgba(255,255,255,0.9)" },
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+                <Typography
+                  variant="subtitle1"
+                  gutterBottom
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    color: "#6a11cb",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <ImageIcon fontSize="small" />
+                  התמונה המקורית
+                </Typography>
+                <Box
+                  component="img"
+                  src={originalImage || "/placeholder.svg"}
+                  alt="Original"
+                  sx={{
+                    maxWidth: "100%",
+                    maxHeight: "300px",
+                    borderRadius: 2,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  }}
+                />
+              </Box>
+            )}
+          </UploadPaper>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          {originalImage ? (
+            <StyledPaper elevation={3} sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+              <Box sx={{ mb: 3 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 1,
+                  }}
+                >
+                  <Typography
+                    id="edge-sensitivity-label"
+                    variant="subtitle2"
+                    sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: "bold" }}
+                  >
+                    <TuneIcon fontSize="small" sx={{ color: "#6a11cb" }} />
+                    רגישות קווי מתאר
+                    <Tooltip
+                      title="ערך גבוה יותר יוצר קווי מתאר חדים יותר, ערך נמוך יותר יוצר קווים עדינים יותר"
+                      placement="top"
+                      TransitionComponent={Zoom}
+                    >
+                      <InfoOutlinedIcon fontSize="small" sx={{ color: "text.secondary", ml: 0.5 }} />
+                    </Tooltip>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#6a11cb",
+                      bgcolor: "rgba(106, 17, 203, 0.1)",
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: 10,
+                    }}
+                  >
+                    {edgeSensitivity}
+                  </Typography>
+                </Box>
+                <StyledSlider
                   aria-labelledby="edge-sensitivity-label"
                   min={10}
                   max={100}
                   value={edgeSensitivity}
                   onChange={(_, value) => setEdgeSensitivity(value as number)}
+                  valueLabelDisplay="auto"
                 />
-              </Box>
-
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="detail-level-label" variant="body2">
-                    רמת פירוט
+                <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    עדין
                   </Typography>
-                  <Typography variant="body2">{detailLevel}</Typography>
-                </Box>
-                <Slider
-                  aria-labelledby="detail-level-label"
-                  min={10}
-                  max={100}
-                  value={detailLevel}
-                  onChange={(_, value) => setDetailLevel(value as number)}
-                />
-              </Box>
-
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="contrast-level-label" variant="body2">
-                    ניגודיות
+                  <Typography variant="caption" color="text.secondary">
+                    חד
                   </Typography>
-                  <Typography variant="body2">{contrastLevel}</Typography>
                 </Box>
-                <Slider
-                  aria-labelledby="contrast-level-label"
-                  min={0}
-                  max={100}
-                  value={contrastLevel}
-                  onChange={(_, value) => setContrastLevel(value as number)}
-                />
-              </Box>
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={1}>
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="edge-sensitivity-contour-label" variant="body2">
-                    רגישות קווים
-                  </Typography>
-                  <Typography variant="body2">{edgeSensitivity}</Typography>
-                </Box>
-                <Slider
-                  aria-labelledby="edge-sensitivity-contour-label"
-                  min={10}
-                  max={100}
-                  value={edgeSensitivity}
-                  onChange={(_, value) => setEdgeSensitivity(value as number)}
-                />
               </Box>
 
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="detail-level-contour-label" variant="body2">
-                    רמת פירוט
-                  </Typography>
-                  <Typography variant="body2">{detailLevel}</Typography>
-                </Box>
-                <Slider
-                  aria-labelledby="detail-level-contour-label"
-                  min={10}
-                  max={100}
-                  value={detailLevel}
-                  onChange={(_, value) => setDetailLevel(value as number)}
-                />
-              </Box>
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={2}>
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="edge-sensitivity-cartoon-label" variant="body2">
-                    עובי קווים
-                  </Typography>
-                  <Typography variant="body2">{edgeSensitivity}</Typography>
-                </Box>
-                <Slider
-                  aria-labelledby="edge-sensitivity-cartoon-label"
-                  min={10}
-                  max={100}
-                  value={edgeSensitivity}
-                  onChange={(_, value) => setEdgeSensitivity(value as number)}
-                />
-              </Box>
-
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                  <Typography id="detail-level-cartoon-label" variant="body2">
-                    רמת פירוט
-                  </Typography>
-                  <Typography variant="body2">{detailLevel}</Typography>
-                </Box>
-                <Slider
-                  aria-labelledby="detail-level-cartoon-label"
-                  min={10}
-                  max={100}
-                  value={detailLevel}
-                  onChange={(_, value) => setDetailLevel(value as number)}
-                />
-              </Box>
-            </TabPanel>
-
-            <Box sx={{ textAlign: "center", mt: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={convertToColoringPage}
-                disabled={isProcessing}
-                sx={{ minWidth: 200 }}
-                startIcon={isProcessing ? <CircularProgress size={24} color="inherit" /> : null}
+              <Box
+                sx={{
+                  textAlign: "center",
+                  mt: 2,
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                {isProcessing ? "מעבד..." : "צור דף צביעה"}
-              </Button>
-            </Box>
-          </Paper>
-        </Box>
-      )}
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "linear-gradient(135deg, rgba(255, 128, 8, 0.1), rgba(255, 200, 55, 0.05))",
+                    mb: 3,
+                  }}
+                >
+                  <BrushIcon sx={{ fontSize: 50, color: "#FF8008" }} />
+                </Box>
+
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+                  מוכן להפוך את התמונה לדף צביעה?
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: "80%", mx: "auto" }}>
+                  התאם את רגישות קווי המתאר לפי הצורך ולחץ על הכפתור למטה
+                </Typography>
+
+                <GradientButton
+                  variant="contained"
+                  onClick={convertToColoringPage}
+                  disabled={isProcessing}
+                  sx={{ minWidth: 200, borderRadius: 8, py: 1.5 }}
+                  startIcon={isProcessing ? <CircularProgress size={24} color="inherit" /> : null}
+                >
+                  {isProcessing ? "מעבד..." : "הפוך לדף צביעה"}
+                </GradientButton>
+              </Box>
+            </StyledPaper>
+          ) : (
+            <StyledPaper
+              elevation={3}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                bgcolor: "rgba(245, 247, 250, 0.7)",
+              }}
+            >
+              <Box
+                sx={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "linear-gradient(135deg, rgba(106, 17, 203, 0.1), rgba(37, 117, 252, 0.05))",
+                  mb: 3,
+                }}
+              >
+                <ImageIcon sx={{ fontSize: 50, color: "#6a11cb" }} />
+              </Box>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+                העלה תמונה להתחלה
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", maxWidth: "80%" }}>
+                העלה תמונה מהמחשב שלך כדי להתחיל בתהליך ההמרה לדף צביעה
+              </Typography>
+            </StyledPaper>
+          )}
+        </Grid>
+      </Grid>
 
       {coloringPage && (
-        <Paper elevation={3} sx={{ p: 3 }}>
-          <Typography variant="subtitle1" gutterBottom align="center">
-            דף הצביעה
+        <StyledPaper elevation={3} sx={{ p: 4, mt: 4 }}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            align="center"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              fontWeight: "bold",
+              color: "#6a11cb",
+              mb: 3,
+            }}
+          >
+            <BrushIcon />
+            דף הצביעה שלך מוכן!
           </Typography>
-          <Box sx={{ textAlign: "center" }}>
-            <img
+          <Box
+            sx={{
+              textAlign: "center",
+              bgcolor: "white",
+              p: 2,
+              borderRadius: 2,
+              boxShadow: "inset 0 0 10px rgba(0,0,0,0.05)",
+            }}
+          >
+            <Box
+              component="img"
               src={coloringPage || "/placeholder.svg"}
               alt="Coloring Page"
-              style={{ maxWidth: "100%", maxHeight: "400px" }}
+              sx={{
+                maxWidth: "100%",
+                maxHeight: "500px",
+                borderRadius: 2,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+              }}
             />
           </Box>
-          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
+
             <Button
               variant="outlined"
               component="a"
               href={coloringPage}
               download="coloring-page.png"
               startIcon={<DownloadIcon />}
+              sx={{ borderRadius: 8, px: 3 }}
             >
               הורד
             </Button>
-            <Button variant="outlined" onClick={() => window.print()} startIcon={<PrintIcon />}>
+
+            <OutlineButton
+              variant="outlined"
+              onClick={() => window.print()}
+              startIcon={<PrintIcon />}
+              sx={{ borderRadius: 8, px: 3 }}
+            >
               הדפס
-            </Button>
-          </Stack>
-        </Paper>
+            </OutlineButton>
+          </Box>
+        </StyledPaper>
       )}
 
       {/* Hidden canvas elements for image processing */}
@@ -711,6 +751,6 @@ export default function ColoringPageConverter() {
         <canvas ref={canvasRef}></canvas>
         <canvas ref={hiddenCanvasRef}></canvas>
       </Box>
-    </Box>
+    </Container>
   )
 }

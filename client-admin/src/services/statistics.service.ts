@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SystemStatisticsDto, UserStatisticsDto } from '../models/UserGrowth';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatisticsService {
-  private apiUrl = 'https://localhost:7004/api/Statistics';
+  private apiUrl = `${environment.apiUrl}/Statistics`;
 
   constructor(private http: HttpClient) { }
 

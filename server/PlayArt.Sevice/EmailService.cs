@@ -1,38 +1,22 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using System.Threading.Tasks;
 
 public class EmailService
 {
-    public async Task SendEmailAsync(string recipientEmail, string subject, string messageBody)
+    public async Task SendEmailAsync(string toEmail, string subject, string body)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Your Name", "youremail@gmail.com"));
-        message.To.Add(new MailboxAddress("", recipientEmail));
+        message.From.Add(new MailboxAddress("paintart", "paintart.rt@gmail.com"));
+        message.To.Add(MailboxAddress.Parse(toEmail));
         message.Subject = subject;
+        message.Body = new TextPart("plain") { Text = body };
 
-        message.Body = new TextPart("html")
-        {
-            Text = messageBody
-        };
-
-        using (var client = new SmtpClient())
-        {
-            // עקיפת בדיקת תעודת השרת (רק למטרות בדיקה)
-            client.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
-
-            // התחברות לשרת SMTP של Gmail עם STARTTLS
-            await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-
-            // אימות עם שם המשתמש והסיסמה שלך
-            await client.AuthenticateAsync("r0504180710@gmail.com", "r4180710");
-
-            // שליחת המייל
-            await client.SendAsync(message);
-
-            // ניתוק
-            await client.DisconnectAsync(true);
-        }
+        using var client = new SmtpClient();
+        await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+        await client.AuthenticateAsync("paintart.rt@gmail.com", "ywvc gmif fcyx dxrv");
+        await client.SendAsync(message);
+        await client.DisconnectAsync(true);
     }
 }
+

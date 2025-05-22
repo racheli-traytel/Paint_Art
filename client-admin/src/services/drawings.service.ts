@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class DrawingService {
-  private readonly baseApiUrl = 'https://localhost:7004/api/drawing';
-  private readonly uploadApiUrl = 'https://localhost:7004/api/upload';
+  private readonly baseApiUrl = `${environment.apiUrl}/drawing`;
+  private readonly uploadApiUrl = `${environment.apiUrl}/upload`;
 
   constructor(private http: HttpClient) {}
 

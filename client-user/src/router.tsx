@@ -18,6 +18,8 @@ export const Router = createBrowserRouter([
     path: '/',
     element: <Layout/>,
     children: [
+      { path: 'coloring-page-converter', element:<ColoringPageConverter/>},
+
       { path:'drawings', element: <SearchAndCategory /> },
       { path:'popular', element: <TopRatedDrawings /> },
 
@@ -29,7 +31,6 @@ export const Router = createBrowserRouter([
         path: '/personal-area', element: <PersonalArea/>,
         children:[
           {index:true , element:<PaintArtDashboard/>},
-          { path: 'coloring-page-converter', element:<ColoringPageConverter/>},
           { path: 'painted-drawings', element:<PaintedDrawings/> },
           { path: 'RecyclingBinPage', element:<RecyclingBinPage/> },
           { path: 'upload', element:<ArtUploader/> },
