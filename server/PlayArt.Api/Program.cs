@@ -21,7 +21,6 @@ using Amazon.Extensions.NETCore.Setup;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Web.Net.Service;
-using YourNamespace.Services;
 
 // קריאת משתני סביבה
 Env.Load();
@@ -130,7 +129,6 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<DataContext>();
-builder.Services.AddHttpClient<DalleService>();
 
 // הוספת ה-Repositories
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
@@ -143,15 +141,12 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
 // הוספת ה-Services
-builder.Services.AddTransient<EmailService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDrawingService, DrawingService>();
 builder.Services.AddScoped<IPaintedDrawingService, PaintedDrawingService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
-//builder.Services.AddHttpClient<IGeminiService, GeminiService>();
-builder.Services.AddHttpClient<DalleService>();
 
 
 // הוספת AutoMapper
