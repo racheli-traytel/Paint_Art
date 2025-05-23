@@ -14,12 +14,16 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY PlayArt.Api/PlayArt.Api.csproj PlayArt.Api/
 COPY PlayArt.Core/PlayArt.Core.csproj PlayArt.Core/
 COPY PlayArt.Data/PlayArt.Data.csproj PlayArt.Data/
 COPY PlayArt.Sevice/PlayArt.Sevice.csproj PlayArt.Sevice/
 RUN dotnet restore PlayArt.Api/PlayArt.Api.csproj
+
+# העתקת כל קבצי הפרויקט כולל Templates
 COPY . .
+
 WORKDIR /src/PlayArt.Api
 RUN dotnet build PlayArt.Api.csproj -c $BUILD_CONFIGURATION -o /app/build
 
@@ -32,4 +36,5 @@ RUN dotnet publish PlayArt.Api.csproj -c $BUILD_CONFIGURATION -o /app/publish /p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "PlayArt.Api.dll"]
