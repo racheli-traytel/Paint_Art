@@ -8,8 +8,6 @@ namespace PlayArt.Api.Controllers
     [ApiController]
     public class ChatApiController : ControllerBase
     {
-        //private readonly OpenAIService _openAIService;
-
 
         private readonly HttpClient client = new HttpClient();
         string openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");

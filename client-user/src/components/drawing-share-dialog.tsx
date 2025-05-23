@@ -113,6 +113,7 @@ export default function DrawingShareDialog({ open, onClose, userId }: DrawingSha
         body: emailBody,
         senderName: user?.firstName || "PaintArt",
         imageUrl: selectedDrawing.imageUrl,
+        templateType:'user'
       }
 
      await api.post("/Mail/send-email", emailData, {

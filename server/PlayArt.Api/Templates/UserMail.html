@@ -6,11 +6,12 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #6a5acd; /* סגול רקע */
+            background-color: #6a5acd;
             margin: 0;
             padding: 0;
             direction: rtl;
             color: #333;
+            text-align: right; /* יישור טקסט לימין */
         }
 
         .container {
@@ -20,35 +21,40 @@
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             overflow: hidden;
+            text-align: right; /* יישור טקסט לימין גם כאן */
         }
 
         header {
-            background: #ff9800; /* כתום חזק */
+            background: linear-gradient(90deg, #e65100, #ff9800);
             color: #fff;
             padding: 25px 20px;
-            text-align: center;
             font-size: 24px;
             font-weight: 700;
+            text-align: right; /* יישור לימין */
         }
 
         main {
             padding: 25px 30px;
             line-height: 1.6;
+            text-align: right; /* יישור לימין */
         }
 
             main p {
                 margin: 15px 0;
                 font-size: 16px;
+                text-align: right; /* לוודא פסקאות מיושרות לימין */
             }
 
         .sender-name {
             font-weight: 700;
-            color: #ff9800;
+            color: #e65100;
+            text-align: right;
+            display: inline-block; /* כדי שהצבע יעבוד טוב */
         }
 
         .image-wrapper {
             margin: 25px 0;
-            text-align: center;
+            text-align: right; /* מיישר את התמונה לימין */
         }
 
             .image-wrapper img {
@@ -57,12 +63,16 @@
                 border-radius: 10px;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
                 border: 1px solid #ddd;
+                display: block;
+                margin-left: 0; /* תמונה מיושרת לימין */
+                margin-right: auto;
             }
 
         h2 {
-            color: #6a5acd; /* כותרת בצבע סגול */
+            color: #6a5acd;
             margin-top: 30px;
             font-weight: 700;
+            text-align: right;
         }
 
         footer {
@@ -70,13 +80,13 @@
             color: #666;
             font-size: 13px;
             padding: 20px 15px;
-            text-align: center;
             border-top: 1px solid #ddd;
+            text-align: right;
         }
 
         a.button-link {
             display: inline-block;
-            background: #ff9800;
+            background: linear-gradient(90deg, #e65100, #ff9800);
             color: #fff !important;
             padding: 14px 35px;
             margin: 30px 0 0;
@@ -84,19 +94,19 @@
             border-radius: 30px;
             font-weight: 700;
             font-size: 16px;
-            transition: background 0.3s ease;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            float: right; /* הכפתור מיושר לימין */
         }
 
             a.button-link:hover {
-                background: #fb8c00;
+                opacity: 0.85;
             }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            הודעה מערכת PaintArt
-        </header>
+        <header>הודעה מערכת PaintArt</header>
         <main>
             <p>שלום,</p>
             <p><span class="sender-name">{{SenderName}}</span> רוצה לשתף אותך בציור שצבע:</p>
@@ -105,9 +115,7 @@
             </div>
             <h2>{{Subject}}</h2>
             <p>{{Body}}</p>
-            <div style="text-align:center;">
-                <a href="https://paintart.onrender.com" class="button-link" target="_blank" rel="noopener noreferrer">כניסה למערכת PaintArt</a>
-            </div>
+            <a href="https://paintart.onrender.com" class="button-link" target="_blank" rel="noopener noreferrer">כניסה למערכת PaintArt</a>
         </main>
         <footer>
             <p>© PaintArt 2025. כל הזכויות שמורות.</p>

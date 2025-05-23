@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DrawingService } from '../../services/drawings.service';
+import { DrawingsService } from '../../services/drawings.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,7 +40,7 @@ export class DrawingManagementComponent implements OnInit {
   loading: boolean = true;
 
   constructor(
-    private drawingService: DrawingService,
+    private drawingService: DrawingsService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}

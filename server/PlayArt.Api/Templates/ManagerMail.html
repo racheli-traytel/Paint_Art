@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>הודעה ממנהל מערכת PaintArt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: right;
+        }
+
+        .header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #2d89ef;
+            padding: 15px;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+        }
+
+        .subject {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0 10px;
+            text-align: right;
+        }
+
+        .body {
+            font-size: 16px;
+            color: #34495e;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">הודעה ממנהל מערכת PaintArt</div>
+        <div class="subject">{{Subject}}</div>
+        <div class="body">{{Body}}</div>
+    </div>
+</body>
+</html>

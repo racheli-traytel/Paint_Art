@@ -65,10 +65,10 @@ const Sidebar = () => {
         onMouseLeave={() => setHoveredItem(null)}
         onClick={onClick}
         sx={{
-          borderRadius: '10px',
+          borderRadius: '12px',
           margin: '8px 4px',
           padding: open ? '8px 16px' : '8px',
-          transition: 'all 0.3s ease',
+          transition: 'all 0.3s ease, border-radius 0.3s ease',
           background: hoveredItem === itemKey 
             ? gradients[itemKey as keyof typeof gradients]
             : 'transparent',
@@ -126,28 +126,29 @@ const Sidebar = () => {
             overflowX: 'hidden',
             backgroundColor: '#f5f5f5',
             borderRight: '1px solid rgba(0,0,0,0.12)',
-            boxShadow: '2px 0 5px rgba(0,0,0,0.1)'
+            boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
+            borderRadius: '0 15px 15px 0'
           },
         }}
         variant="permanent"
         anchor="left"
         open={open}
       >
-        <List   sx={{ 
-    padding: '16px 8px', 
-    display: 'flex', 
-    flexDirection: 'column', 
-    height: '100%', 
-    justifyContent: 'center', 
-    marginTop: '-7px' // מרים מעט את הכפתורים כלפי מעלה
-  }}>
+        <List sx={{ 
+          padding: '16px 8px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          height: '100%', 
+          justifyContent: 'center', 
+          marginTop: '-7px'
+        }}>
           <SidebarItem 
             icon={<AccountCircle />} 
             text="פרופיל אישי" 
             to="/profile" 
             itemKey="profile"
           />
-           <SidebarItem 
+          <SidebarItem 
             icon={<Home />} 
             text=" לעמוד הראשי" 
             to="/personal-area" 
@@ -165,7 +166,6 @@ const Sidebar = () => {
             to="/personal-area/upload" 
             itemKey="upload"
           />
-
           <SidebarItem 
             icon={<Recycling />} 
             text="סל מיחזור" 
@@ -176,7 +176,7 @@ const Sidebar = () => {
             icon={<ExitToApp />} 
             text="התנתקות" 
             onClick={handleLogout} 
-            to='/'
+            to="/"
             itemKey="logout"
           />
         </List>

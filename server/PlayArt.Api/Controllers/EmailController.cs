@@ -14,30 +14,36 @@ namespace Api.Controllers
         {
             try
             {
-                // קריאה לקובץ HTML עם קידוד UTF-8
-                var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "ManaggerMail.html");
+                // קביעת שם הקובץ בהתאם לסוג התבנית
+                string templateFile = request.TemplateType?.ToLower() switch
+                {
+                    "manager" => "ManagerMail.html",
+                    "user" => "UserMail.html",
+                    _ => "DefaultMail.html" // אפשרות ברירת מחדל אם לא הוגדר
+                };
+
+                // קריאה לתבנית HTML עם קידוד UTF-8
+                var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", templateFile);
                 var htmlTemplate = System.IO.File.ReadAllText(templatePath, System.Text.Encoding.UTF8);
 
-                // החלפת משתנים בתבנית ה-HTML
+                // החלפת משתנים בתבנית
                 var bodyWithHtml = htmlTemplate
                     .Replace("{{Subject}}", request.Subject)
                     .Replace("{{Body}}", request.Body)
                     .Replace("{{SenderName}}", request.SenderName)
                     .Replace("{{ImageUrl}}", request.ImageUrl);
 
-                // הגדרות SMTP
+                // שליפת סיסמה מהסביבה
                 var smtpPassword = Environment.GetEnvironmentVariable("SMTP_PASSWORD");
 
                 var smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
-
                     Credentials = new NetworkCredential("paintart.rt@gmail.com", smtpPassword),
                     EnableSsl = true,
                     UseDefaultCredentials = false,
                 };
 
-                // יצירת הודעת מייל עם גוף HTML וקידוד UTF-8
                 var mailMessage = new MailMessage
                 {
                     From = new MailAddress("paintart.rt@gmail.com"),
@@ -49,8 +55,6 @@ namespace Api.Controllers
                 };
 
                 mailMessage.To.Add(request.To);
-
-                // הגדרת כותרות עם קידוד נכון
                 mailMessage.HeadersEncoding = System.Text.Encoding.UTF8;
                 mailMessage.Headers.Add("Content-Type", "text/html; charset=utf-8");
 
@@ -59,12 +63,12 @@ namespace Api.Controllers
             }
             catch (SmtpException smtpEx)
             {
-                Console.WriteLine($"SMTP error details: {smtpEx.ToString()}");
+                Console.WriteLine($"SMTP error details: {smtpEx}");
                 return BadRequest($"SMTP error: {smtpEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error details: {ex.ToString()}");
+                Console.WriteLine($"Error details: {ex}");
                 return BadRequest($"An error occurred: {ex.Message}");
             }
         }
@@ -75,7 +79,8 @@ namespace Api.Controllers
         public string To { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
-        public string SenderName { get; set; }  // שם השולח שיוצג במייל
-        public string ImageUrl { get; set; }    // כתובת התמונה שתוצג במייל
+        public string SenderName { get; set; }
+        public string ImageUrl { get; set; }
+        public string TemplateType { get; set; } 
     }
 }

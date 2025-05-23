@@ -69,7 +69,7 @@ const PersonalDashboard = () => {
   const navigate = useNavigate()
 
   return (
-    <DashboardWrapper>
+    <DashboardWrapper >
       {/* Decorative background bubbles - more subtle */}
       <Bubble size={120} x={10} y={20} delay={1} />
       <Bubble size={80} x={80} y={60} delay={2} />

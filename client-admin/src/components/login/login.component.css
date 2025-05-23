@@ -4,12 +4,259 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #0a0e12 0%, #061724 100%);
+  background: linear-gradient(135deg, #0a0e12 0%, #061724 50%, #0d1117 100%);
   font-family: 'Segoe UI', 'Roboto', sans-serif;
   overflow: hidden;
   position: relative;
 }
 
+/* אנימציות רקע מתקדמות */
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* עיגולי אור מרחפים */
+.light-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 191, 165, 0.3) 0%, transparent 70%);
+  filter: blur(2px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.circle-1 {
+  width: 120px;
+  height: 120px;
+  top: 10%;
+  left: 15%;
+  animation-delay: 0s;
+  animation-duration: 12s;
+}
+
+.circle-2 {
+  width: 80px;
+  height: 80px;
+  top: 70%;
+  right: 20%;
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+
+.circle-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 20%;
+  left: 10%;
+  animation-delay: -6s;
+  animation-duration: 14s;
+}
+
+.circle-4 {
+  width: 60px;
+  height: 60px;
+  top: 30%;
+  right: 10%;
+  animation-delay: -2s;
+  animation-duration: 8s;
+}
+
+.circle-5 {
+  width: 100px;
+  height: 100px;
+  top: 50%;
+  left: 80%;
+  animation-delay: -4s;
+  animation-duration: 11s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* קווי זוהר נעים */
+.glow-line {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, rgba(0, 191, 165, 0.6), transparent);
+  filter: blur(1px);
+  animation: slideGlow 15s linear infinite;
+}
+
+.line-1 {
+  width: 300px;
+  height: 2px;
+  top: 25%;
+  left: -300px;
+  animation-delay: 0s;
+}
+
+.line-2 {
+  width: 200px;
+  height: 1px;
+  top: 65%;
+  right: -200px;
+  animation-delay: -5s;
+  animation-direction: reverse;
+}
+
+.line-3 {
+  width: 250px;
+  height: 1.5px;
+  top: 85%;
+  left: -250px;
+  animation-delay: -10s;
+}
+
+@keyframes slideGlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(100vw + 300px));
+  }
+}
+
+/* חלקיקים מרחפים */
+.floating-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(0, 191, 165, 0.8);
+  border-radius: 50%;
+  animation: particleFloat 20s linear infinite;
+  box-shadow: 0 0 6px rgba(0, 191, 165, 0.5);
+}
+
+.particle:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.particle:nth-child(2) {
+  left: 20%;
+  animation-delay: -3s;
+  animation-duration: 22s;
+}
+
+.particle:nth-child(3) {
+  left: 30%;
+  animation-delay: -6s;
+  animation-duration: 16s;
+}
+
+.particle:nth-child(4) {
+  left: 40%;
+  animation-delay: -9s;
+  animation-duration: 24s;
+}
+
+.particle:nth-child(5) {
+  left: 60%;
+  animation-delay: -12s;
+  animation-duration: 19s;
+}
+
+.particle:nth-child(6) {
+  left: 70%;
+  animation-delay: -15s;
+  animation-duration: 21s;
+}
+
+.particle:nth-child(7) {
+  left: 80%;
+  animation-delay: -18s;
+  animation-duration: 17s;
+}
+
+.particle:nth-child(8) {
+  left: 90%;
+  animation-delay: -21s;
+  animation-duration: 23s;
+}
+
+@keyframes particleFloat {
+  0% {
+    top: 100%;
+    opacity: 0;
+    transform: scale(0);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    top: -10%;
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* גלים מונפשים */
+.wave-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(0, 191, 165, 0.1), transparent);
+  animation: waveMove 12s ease-in-out infinite;
+}
+
+.wave1 {
+  animation-delay: 0s;
+  opacity: 0.3;
+}
+
+.wave2 {
+  animation-delay: -4s;
+  opacity: 0.2;
+}
+
+.wave3 {
+  animation-delay: -8s;
+  opacity: 0.1;
+}
+
+@keyframes waveMove {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-20px);
+  }
+}
+
+/* עיצוב הקרטון */
 .login-container {
   width: 100%;
   max-width: 450px;
@@ -19,20 +266,47 @@
 }
 
 .login-card {
-  background-color: rgba(19, 21, 23, 0.85);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(19, 21, 23, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 16px 64px rgba(0, 191, 165, 0.1);
   padding: 40px;
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   position: relative;
   z-index: 2;
+  transform: translateY(0);
+  animation: cardSlideIn 1s ease-out;
+  overflow: hidden;
 }
 
+
+@keyframes cardSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* לוגו עם אפקט זוהר */
 .app-logo {
   text-align: center;
   margin-bottom: 30px;
+  position: relative;
 }
 
 .app-logo h1 {
@@ -40,12 +314,49 @@
   margin: 0;
   font-size: 2.5rem;
   letter-spacing: 1px;
+  position: relative;
+  z-index: 2;
+  animation: logoGlow 3s ease-in-out infinite alternate;
 }
 
 .app-logo span {
   color: #00bfa5;
+  text-shadow: 0 0 20px rgba(0, 191, 165, 0.5);
 }
 
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 80px;
+  background: radial-gradient(ellipse, rgba(0, 191, 165, 0.2) 0%, transparent 70%);
+  animation: pulseGlow 2s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes logoGlow {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 191, 165, 0.3);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* כותרת */
 .login-header {
   text-align: center;
   margin-bottom: 40px;
@@ -55,6 +366,10 @@
   font-size: 1.8rem;
   margin-bottom: 10px;
   font-weight: 500;
+  background: linear-gradient(45deg, #ffffff, #e9ecef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .login-header p {
@@ -62,8 +377,22 @@
   font-size: 0.95rem;
   max-width: 320px;
   margin: 0 auto;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.5s forwards;
 }
 
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* טופס */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -74,6 +403,12 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.7s forwards;
+}
+
+.form-field:nth-child(2) {
+  animation-delay: 0.9s;
 }
 
 .form-field label {
@@ -88,21 +423,25 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .input-container:focus-within {
   border-color: #00bfa5;
-  box-shadow: 0 0 0 2px rgba(0, 191, 165, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 191, 165, 0.2),
+              0 0 20px rgba(0, 191, 165, 0.1);
+  transform: translateY(-2px);
 }
 
 .input-container input {
   width: 100%;
   padding: 14px 40px 14px 14px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: transparent;
   border: none;
   color: #ffffff;
   font-size: 1rem;
   outline: none;
+  transition: all 0.3s ease;
 }
 
 .input-container input::placeholder {
@@ -116,24 +455,35 @@
   transform: translateY(-50%);
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .input-container:focus-within mat-icon {
   color: #00bfa5;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .error-message {
   color: #ff6b6b;
   font-size: 0.8rem;
   margin-top: 4px;
+  animation: shake 0.5s ease-in-out;
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* אפשרויות טופס */
 .form-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 5px;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 1.1s forwards;
 }
 
 .forgot-password {
@@ -142,26 +492,56 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.forgot-password::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #00e6c3;
+  transition: width 0.3s ease;
 }
 
 .forgot-password:hover {
   color: #00e6c3;
-  text-decoration: underline;
+  transform: translateY(-1px);
 }
 
+.forgot-password:hover::after {
+  width: 100%;
+}
+
+/* התראת שגיאה */
 .error-alert {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: rgba(255, 107, 107, 0.1);
+  background: rgba(255, 107, 107, 0.1);
   border: 1px solid rgba(255, 107, 107, 0.3);
   border-radius: 8px;
   padding: 12px;
   margin-top: 10px;
   color: #ff6b6b;
   font-size: 0.9rem;
+  animation: alertSlideIn 0.5s ease-out;
 }
 
+@keyframes alertSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* כפתור התחברות */
 .login-button {
   display: flex;
   justify-content: center;
@@ -180,22 +560,87 @@
   box-shadow: 0 4px 12px rgba(0, 191, 165, 0.25);
   position: relative;
   overflow: hidden;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 1.3s forwards;
+}
+
+.login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.login-button:hover:not([disabled])::before {
+  left: 100%;
 }
 
 .login-button:hover:not([disabled]) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 191, 165, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 191, 165, 0.4);
+  background: linear-gradient(90deg, #00a693 0%, #00d4b8 100%);
 }
 
 .login-button:active:not([disabled]) {
-  transform: translateY(1px);
+  transform: translateY(-1px);
 }
 
 .login-button[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
+  background: linear-gradient(90deg, #495057 0%, #6c757d 100%);
 }
 
 .login-button mat-icon {
   font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.login-button:hover:not([disabled]) mat-icon {
+  transform: translateX(3px);
+}
+
+.button-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+  pointer-events: none;
+}
+
+.login-button:active:not([disabled]) .button-ripple {
+  width: 300px;
+  height: 300px;
+}
+
+/* אנימציות רספונסיביות */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 10px;
+  }
+  
+  .login-card {
+    padding: 30px 20px;
+  }
+  
+  .app-logo h1 {
+    font-size: 2rem;
+  }
+  
+  .light-circle {
+    display: none;
+  }
+  
+  .glow-line {
+    display: none;
+  }
 }

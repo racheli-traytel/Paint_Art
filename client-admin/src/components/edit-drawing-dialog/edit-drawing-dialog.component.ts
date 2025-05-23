@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { DrawingService } from '../../services/drawings.service';
+import { DrawingsService } from '../../services/drawings.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,7 +39,7 @@ export class EditDrawingDialogComponent implements OnInit {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditDrawingDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private drawingService: DrawingService
+    private drawingService: DrawingsService
   ) {
     // Store the original name
     this.originalName = data.drawing ? data.drawing.name : '';

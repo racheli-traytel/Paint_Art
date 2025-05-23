@@ -1,72 +1,101 @@
-<!-- login.component.html -->
 <div class="login-container">
   <div class="animated-background">
     <div class="light-circle circle-1"></div>
     <div class="light-circle circle-2"></div>
     <div class="light-circle circle-3"></div>
+    <div class="light-circle circle-4"></div>
+    <div class="light-circle circle-5"></div>
     <div class="glow-line line-1"></div>
     <div class="glow-line line-2"></div>
+    <div class="glow-line line-3"></div>
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="wave-container">
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+    </div>
   </div>
-  
+ 
   <div class="login-card">
     <div class="app-logo">
       <h1>Art<span>Manager</span></h1>
+      <div class="logo-glow"></div>
     </div>
-    
+   
     <div class="login-header">
       <h2>התחברות למערכת</h2>
       <p>הזינו את פרטי הכניסה שלכם כדי לנהל את אוסף היצירות</p>
     </div>
-    
+   
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-field">
         <label for="email">דואר אלקטרוני</label>
         <div class="input-container">
-          <input 
-            id="email" 
-            type="email" 
-            formControlName="email" 
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
             placeholder="your@email.com"
             autocomplete="email">
           <mat-icon>email</mat-icon>
         </div>
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
-          <span *ngIf="loginForm.get('email')?.hasError('required')">דואר אלקטרוני נדרש</span>
-          <span *ngIf="loginForm.get('email')?.hasError('email')">נא להזין כתובת דואר אלקטרוני תקינה</span>
-        </div>
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <div class="error-message">
+            @if (loginForm.get('email')?.hasError('required')) {
+              <span>דואר אלקטרוני נדרש</span>
+            }
+            @if (loginForm.get('email')?.hasError('email')) {
+              <span>נא להזין כתובת דואר אלקטרוני תקינה</span>
+            }
+          </div>
+        }
       </div>
-      
+     
       <div class="form-field">
         <label for="password">סיסמה</label>
         <div class="input-container">
-          <input 
-            id="password" 
-            [type]="hidePassword ? 'password' : 'text'" 
-            formControlName="password" 
+          <input
+            id="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
             placeholder="הזינו את הסיסמה שלכם"
             autocomplete="current-password">
           <mat-icon (click)="hidePassword = !hidePassword">
             {{hidePassword ? 'visibility' : 'visibility_off'}}
           </mat-icon>
         </div>
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
-          <span>סיסמה נדרשת</span>
-        </div>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <div class="error-message">
+            <span>סיסמה נדרשת</span>
+          </div>
+        }
       </div>
-      
+     
       <div class="form-options">
         <mat-checkbox formControlName="rememberMe" color="primary">זכור אותי</mat-checkbox>
         <a class="forgot-password" (click)="forgotPassword()">שכחתי סיסמה</a>
       </div>
-      
-      <div *ngIf="showError" class="error-alert">
-        <mat-icon>error</mat-icon>
-        <span>{{errorMessage}}</span>
-      </div>
-      
+     
+      @if (showError) {
+        <div class="error-alert">
+          <mat-icon>error</mat-icon>
+          <span>{{errorMessage}}</span>
+        </div>
+      }
+     
       <button type="submit" class="login-button" [disabled]="loginForm.invalid">
         <span>התחברות</span>
         <mat-icon>login</mat-icon>
+        <div class="button-ripple"></div>
       </button>
     </form>
   </div>

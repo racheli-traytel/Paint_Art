@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class DrawingService {
+export class DrawingsService {
   private readonly baseApiUrl = `${environment.apiUrl}/drawing`;
   private readonly uploadApiUrl = `${environment.apiUrl}/upload`;
 

@@ -841,18 +841,15 @@ const ShapesTool: React.FC<ShapesToolProps> = ({ onSelectShape, onClose }) => {
 
   const handleShapeSelect = (shape: string) => {
     setSelectedShape(shape)
-    // הסרנו את הקריאה ל-onSelectShape כאן
   }
 
   const handleSizeChange = (_event: Event, newValue: number | number[]) => {
     const size = newValue as number
     setShapeSize(size)
-    // הסרנו את הקריאה ל-onSelectShape כאן
   }
 
   const handleColorSelect = (color: string) => {
     setShapeColor(color)
-    // הסרנו את הקריאה ל-onSelectShape כאן
   }
 
   const toggleFilled = () => {

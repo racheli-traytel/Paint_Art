@@ -308,14 +308,14 @@ const ArtUploader = () => {
             maxWidth: 1000, 
             mx: 'auto', 
             p: 13, 
-            my: 13, 
+            my: 19, 
             background: `linear-gradient(to bottom, ${colorPalette.cardBg} 0%, ${colorPalette.background} 100%)`,
             boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
           }}
         >
           {/* Header */}
-          <HeaderBox>
-            <Typography 
+          <HeaderBox sx={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center' }}>
+          <Typography 
               variant="h4" 
               fontWeight="bold" 
               sx={{ 
@@ -398,8 +398,8 @@ const ArtUploader = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 sx={{ 
                   mb: 3, 
-                  direction: 'rtl', 
-                  '& label': { right: 14, left: 'unset' },
+                  direction: 'ltr', 
+                  '& label': { left: 14, right: 'unset' },
                   '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
                       borderColor: colorPalette.accent2,
@@ -407,7 +407,7 @@ const ArtUploader = () => {
                   }
                 }}
                 InputProps={{ 
-                  sx: { textAlign: 'right' },
+                  sx: { textAlign: 'left' },
                   startAdornment: (
                     <InputAdornment position="start">
                       <Box sx={{ 
@@ -429,7 +429,7 @@ const ArtUploader = () => {
                   value={category}
                   onChange={(e) => setCategory(e.target.value as number)}
                   sx={{ 
-                    textAlign: 'right',
+                    textAlign: 'left',
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                       borderColor: colorPalette.accent3,
                     },
@@ -453,15 +453,15 @@ const ArtUploader = () => {
                 minRows={4}
                 sx={{ 
                   mb: 3, 
-                  direction: 'rtl', 
-                  '& label': { right: 14, left: 'unset' },
+                  direction: 'ltr', 
+                  '& label': { left: 14, right: 'unset' },
                   '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
                       borderColor: colorPalette.accent4,
                     },
                   }
                 }}
-                InputProps={{ sx: { textAlign: 'right' } }}
+                InputProps={{ sx: { textAlign: 'left' } }}
               />
               
               <Button
@@ -471,7 +471,7 @@ const ArtUploader = () => {
                 sx={{ 
                   display: 'flex', 
                   justifyContent: 'space-between', 
-                  textAlign: 'right',
+                  textAlign: 'left',
                   py: 1.5,
                   mb: 2,
                   borderWidth: 2,
@@ -505,7 +505,7 @@ const ArtUploader = () => {
           
           {/* Progress Bar */}
           <Box sx={{ mt: 3, mb: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row-reverse', mb: 0.5 }}>
               <Typography variant="body2" sx={{ color: colorPalette.accent3, fontWeight: 'bold' }}>
                 {progress}%
               </Typography>
