@@ -12,7 +12,7 @@ interface CanvasActionsProps {
   onSave: () => void
 }
 
-export const CanvasActions: React.FC<CanvasActionsProps> = ({ isPainted, onPrint, onDownload, onClear, onSave }) => {
+export const CanvasActions: React.FC<CanvasActionsProps> = ({ onPrint, onDownload, onClear, onSave }) => {
   return (
     <Paper
       elevation={2}
