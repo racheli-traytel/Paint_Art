@@ -155,6 +155,8 @@ export default function ColoringPageConverter() {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
+    console.log("file",file);
+    
     if (!file) return
 
     const reader = new FileReader()
@@ -746,7 +748,6 @@ export default function ColoringPageConverter() {
         </StyledPaper>
       )}
 
-      {/* Hidden canvas elements for image processing */}
       <Box sx={{ display: "none" }}>
         <canvas ref={canvasRef}></canvas>
         <canvas ref={hiddenCanvasRef}></canvas>

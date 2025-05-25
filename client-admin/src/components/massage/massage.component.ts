@@ -96,6 +96,7 @@ export class MassageComponent implements OnInit {
       hasBackdrop: true,
       backdropClass: 'dialog-backdrop',
       panelClass: 'dialog-panel',
+      
       direction: 'rtl'
     });
   

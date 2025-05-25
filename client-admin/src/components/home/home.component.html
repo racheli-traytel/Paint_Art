@@ -1,21 +1,94 @@
-<header class="header">
-    <nav class="nav">
-      <button mat-button class="btn black" [routerLink]="['/home/show-users']" routerLinkActive="buttonactive">
-        <mat-icon>menu_book</mat-icon>users
-      </button>
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <mat-icon class="logo-icon">palette</mat-icon>
+        <h1 class="site-title">מנהל ציורים</h1>
+      </div>
+      
+      
+
+      <nav class="nav">
 
 
-      <button mat-button class="btn black"  [routerLink]="['/home/UserGrowth']" routerLinkActive="buttonactive">
-        <mat-icon>info</mat-icon>show stetistics
-      </button>
+        <button mat-raised-button class="home-btn" [routerLink]="['/home']" routerLinkActive="nav-btn-active">
+          <mat-icon>home</mat-icon>
+          <span>עמוד ראשי</span>
+        </button>
 
-      <button mat-button class="btn black"  [routerLink]="['/home/drawings']" routerLinkActive="buttonactive">
-        <mat-icon>info</mat-icon>manage drawings
-      </button>
-
-      <button mat-button class="btn black"  [routerLink]="['/home/massage']" routerLinkActive="buttonactive">
-        <mat-icon>info</mat-icon>massages
-      </button>
-    </nav>
+        
+        <button mat-raised-button class="nav-btn" [routerLink]="['/home/show-users']" routerLinkActive="nav-btn-active">
+          <mat-icon>people</mat-icon>
+          <span>משתמשים</span>
+        </button>
+        
+        <button mat-raised-button class="nav-btn" [routerLink]="['/home/UserGrowth']" routerLinkActive="nav-btn-active">
+          <mat-icon>analytics</mat-icon>
+          <span>סטטיסטיקות</span>
+        </button>
+        
+        <button mat-raised-button class="nav-btn" [routerLink]="['/home/drawings']" routerLinkActive="nav-btn-active">
+          <mat-icon>brush</mat-icon>
+          <span>ניהול ציורים</span>
+        </button>
+        
+        <button mat-raised-button class="nav-btn" [routerLink]="['/home/massage']" routerLinkActive="nav-btn-active">
+          <mat-icon>message</mat-icon>
+          <span>הודעות</span>
+        </button>
+      </nav>
+    </div>
   </header>
-  <router-outlet></router-outlet>
+
+  <main class="main-content">
+    <div class="dashboard-container" *ngIf="showDashboard">
+      <div class="dashboard-welcome">
+        <div class="welcome-card">
+          <mat-icon class="welcome-icon">dashboard</mat-icon>
+          <h2 class="welcome-title">ברוכים הבאים למערכת ניהול הציורים</h2>
+          <p class="welcome-text">מערכת מתקדמת לניהול ציורים, משתמשים וסטטיסטיקות</p>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-card" [routerLink]="['/home/show-users']">
+          <mat-icon class="card-icon">people</mat-icon>
+          <h3 class="card-title">ניהול משתמשים</h3>
+          <p class="card-description">צפייה ועריכה של פרטי המשתמשים במערכת</p>
+          <div class="card-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </div>
+
+        <div class="dashboard-card" [routerLink]="['/home/UserGrowth']">
+          <mat-icon class="card-icon">analytics</mat-icon>
+          <h3 class="card-title">סטטיסטיקות</h3>
+          <p class="card-description">נתונים וגרפים על פעילות המשתמשים</p>
+          <div class="card-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </div>
+
+        <div class="dashboard-card" [routerLink]="['/home/drawings']">
+          <mat-icon class="card-icon">brush</mat-icon>
+          <h3 class="card-title">ניהול ציורים</h3>
+          <p class="card-description">ארגון וניהול גלריית הציורים</p>
+          <div class="card-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </div>
+
+        <div class="dashboard-card" [routerLink]="['/home/massage']">
+          <mat-icon class="card-icon">message</mat-icon>
+          <h3 class="card-title">הודעות</h3>
+          <p class="card-description">תיבת הודעות ותקשורת עם משתמשים</p>
+          <div class="card-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <router-outlet (activate)="onRouteActivate()" (deactivate)="onRouteDeactivate()"></router-outlet>
+  </main>
+</div>

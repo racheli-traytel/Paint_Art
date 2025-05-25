@@ -5,14 +5,13 @@ import PaintedDrawings from './components/PaintedDrawings'
 import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
 import ArtUploader from './components/Upload'
-import PaintCanvas from './components/PaintCanvas'
 import TopRatedDrawings from './components/Popular'
 import Layout from './components/Layout'
 import MyMostPopularDrawings from './components/MyMostPopularDrawings'
 import PaintArtDashboard from './components/PaintArtDashboard'
 import RecyclingBinPage from './components/RecyclingBinPage'
-import ColoringPageConverter from './components/ColoringPageConverter'
-
+import PaintCanvas from './components/paint-canvas/index'
+import { ColoringPageConverter } from './components/coloring-page-converter/index'
 export const Router = createBrowserRouter([
   {
     path: '/',
@@ -25,7 +24,6 @@ export const Router = createBrowserRouter([
 
       { index:true, element: <SearchAndCategory /> },
       { path:':id', element: <PaintCanvas isPainted={false}/> },
-      // { path:'ai-paint/:id', element: <AIPaintPage/> },
 
       {
         path: '/personal-area', element: <PersonalArea/>,

@@ -1,6 +1,7 @@
 ﻿using Api_Bussiness.API.PostEntity;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using PlayArt.Core;
 using PlayArt.Core.DTOs;
 using PlayArt.Core.entities;
 using PlayArt.Core.Interfaces.Services_interfaces;
@@ -53,6 +54,12 @@ public class AuthController : ControllerBase
             return Conflict("משתמש לא תקין");
         }
 
+        // בדיקת תקינות של מייל
+        if (!Validations.IsValidEmail(model.Email))
+        {
+            return BadRequest("כתובת מייל אינה תקינה");
+        }
+
         var modelD = _mapper.Map<UserDTO>(model);
 
         // העברת הסיסמה ישירות למתודה
@@ -65,9 +72,12 @@ public class AuthController : ControllerBase
         if (userRole == null)
             return BadRequest("תפקיד לא תקין");
 
-        var token = _authService.GenerateJwtToken(existingUser.Id,model.Email, new[] { model.RoleName });
+        var token = _authService.GenerateJwtToken(existingUser.Id, model.Email, new[] { model.RoleName });
         return Ok(new { Token = token, User = existingUser });
     }
+
+
+
 
 }
 

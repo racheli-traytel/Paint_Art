@@ -2,8 +2,6 @@ import  { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootStore } from './redux/Store';
-
-// MUI imports
 import { 
   Box, Typography, TextField, Button, MenuItem, LinearProgress, Paper, Grid, IconButton, Avatar,
   InputAdornment, FormControl, InputLabel, Select, Alert, styled
@@ -15,7 +13,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CircularProgress from '@mui/material/CircularProgress';
 import PaletteIcon from '@mui/icons-material/Palette';
 
-// RTL setup
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
@@ -24,30 +21,20 @@ import { fetchCategories } from './redux/CategorySlice';
 import { addDrawing } from './redux/DrawingSlice';
 import api from './api';
 
-// Create rtl cache
 const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [ rtlPlugin],
 });
 
-// צבעים צבעוניים יותר
 const colorPalette = {
-  primary: '#5038BC',         // Rich purple-blue (main blue)
-  secondary: '#FF8C38',       // Vibrant orange
-  accent1: '#7A5FEC',         // Lighter purple-blue
-  accent2: '#FF6B00',         // Darker orange
-  accent3: '#3A2A96',         // Deep blue
-  accent4: '#FFB27A',         // Light orange
-  background: '#f8f9fa',      // Light background
-  cardBg: '#ffffff',          // Card background
-  success: '#4BB543',         // Success green
-  warning: '#FFC107',         // Warning yellow
-  uploadBtn: 'linear-gradient(45deg, #5038BC 30%, #7A5FEC 90%)', // Blue gradient
+  primary: '#5038BC', secondary: '#FF8C38', accent1: '#7A5FEC',accent2: '#FF6B00',    
+  accent3: '#3A2A96',accent4: '#FFB27A',background: '#f8f9fa',cardBg: '#ffffff',          
+  success: '#4BB543', warning: '#FFC107',         
+  uploadBtn: 'linear-gradient(45deg, #5038BC 30%, #7A5FEC 90%)', 
   uploadBtnHover: 'linear-gradient(45deg, #3A2A96 30%, #5038BC 90%)',
   imageBorder: 'linear-gradient(135deg, #FF8C38, #FF6B00, #5038BC, #7A5FEC)',
 };
 
-// Create RTL theme with updated colors
 const rtlTheme = createTheme({
   direction: 'rtl',
   typography: {
@@ -95,7 +82,6 @@ const rtlTheme = createTheme({
   },
 });
 
-// Styled components
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -193,7 +179,6 @@ const ArtUploader = () => {
       setFileName(selectedFile.name);
       setFileSize((selectedFile.size / (1024 * 1024)).toFixed(2)); // Convert to MB
       
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
@@ -236,7 +221,6 @@ const ArtUploader = () => {
     setProgress(0);
   
     try {
-      // שלב 1: קבלת Presigned URL מהשרת
       const response = await api.get('/upload/presigned-url', {
         params:
         { 
@@ -249,7 +233,6 @@ const ArtUploader = () => {
   
       const presignedUrl = response.data.url;
   
-      // שלב 2: העלאת הקובץ ישירות ל-S3
       await axios.put(presignedUrl, file, {
         headers: {
           'Content-Type': file.type,
@@ -262,7 +245,6 @@ const ArtUploader = () => {
         },
       });
   
-      // שלב 3: קבלת URL להורדה לאחר ההעלאה
       const downloadResponse = await api.get(`/upload/download-url/${file.name}`);
       const downloadUrl = downloadResponse.data;
       console.log('Download URL:', downloadUrl);
@@ -313,7 +295,6 @@ const ArtUploader = () => {
             boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
           }}
         >
-          {/* Header */}
           <HeaderBox sx={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center' }}>
           <Typography 
               variant="h4" 
@@ -333,7 +314,6 @@ const ArtUploader = () => {
           </HeaderBox>
           
           <Grid container spacing={4}>
-            {/* Image Upload Area */}
             <Grid item xs={12} md={6}>
               <ImagePreviewBox>
                 {imagePreview ? (
@@ -386,8 +366,6 @@ const ArtUploader = () => {
                 )}
               </ImagePreviewBox>
             </Grid>
-            
-            {/* Form Fields */}
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
@@ -420,7 +398,6 @@ const ArtUploader = () => {
                   ) 
                 }}
               />
-              
               <FormControl fullWidth required sx={{ mb: 3 }}>
                 <InputLabel id="category-label" sx={{ right: 14, left: 'unset' }}>קטגוריה</InputLabel>
                 <Select
@@ -442,7 +419,6 @@ const ArtUploader = () => {
                   ))}
                 </Select>
               </FormControl>
-              
               <TextField
                 fullWidth
                 id="description"
@@ -463,7 +439,6 @@ const ArtUploader = () => {
                 }}
                 InputProps={{ sx: { textAlign: 'left' } }}
               />
-              
               <Button
                 component="label"
                 fullWidth
@@ -489,9 +464,7 @@ const ArtUploader = () => {
                 <VisuallyHiddenInput type="file" onChange={handleFileChange} accept="image/*" />
               </Button>
             </Grid>
-          </Grid>
-          
-          {/* File Info */}
+          </Grid> 
           {fileName && (
             <FileInfo>
               <Typography variant="body2" sx={{ color: colorPalette.accent4, fontWeight: 'bold' }}>
@@ -502,8 +475,6 @@ const ArtUploader = () => {
               </Typography>
             </FileInfo>
           )}
-          
-          {/* Progress Bar */}
           <Box sx={{ mt: 3, mb: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row-reverse', mb: 0.5 }}>
               <Typography variant="body2" sx={{ color: colorPalette.accent3, fontWeight: 'bold' }}>
@@ -523,9 +494,7 @@ const ArtUploader = () => {
                 }
               }} 
             />
-          </Box>
-          
-          {/* Action Buttons */}
+          </Box> 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
             <Button
               variant="outlined"
@@ -557,8 +526,6 @@ const ArtUploader = () => {
               {isUploading ? '...מעלה' : 'העלאה'}
             </GradientButton>
           </Box>
-          
-          {/* Success Message */}
           {uploadComplete && (
             <Alert 
               severity="success" 
@@ -578,5 +545,4 @@ const ArtUploader = () => {
     </CacheProvider>
   );
 };
-
 export default ArtUploader;

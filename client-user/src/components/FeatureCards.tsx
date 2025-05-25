@@ -1,242 +1,465 @@
-import React from 'react';
-import { 
-  Container, 
-  Grid, 
-  Box, 
-  Typography, 
-  Button, 
-  Card, 
-  CardContent, 
-  CardActions,
-  styled,
-  SvgIcon
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+"use client"
 
-// Styled components
+import { useState, useEffect } from "react"
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Avatar,
+  Rating,
+  Chip,
+  Grow,
+} from "@mui/material"
+import { styled, keyframes } from "@mui/material/styles"
+import { Star, Upload, Palette, Image as ImageIcon, Share, FormatQuote } from "@mui/icons-material"
+import { useNavigate } from "react-router-dom"
+
+// Animations
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+`
+
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`
+
+// Styled Components
 const FeatureCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  textAlign: 'center',
-  borderRadius: theme.spacing(2),
-  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-  overflow: 'hidden',
-  backgroundColor: 'white',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: '0 8px 25px rgba(0,0,0,0.12)',
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  textAlign: "center",
+  borderRadius: theme.spacing(3),
+  background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
+  boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+  overflow: "hidden",
+  position: "relative",
+  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+  border: "1px solid rgba(255,255,255,0.2)",
+  "&:hover": {
+    transform: "translateY(-12px) scale(1.02)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
+    "& .feature-icon": {
+      animation: `${pulse} 2s infinite`,
+    },
+    "& .feature-button": {
+      background: "linear-gradient(45deg, #ff9f43 0%, #f39200 100%)",
+      transform: "scale(1.05)",
+    },
   },
-}));
+}))
 
 const IconContainer = styled(Box)(({ theme }) => ({
-  width: 80,
-  height: 80,
-  borderRadius: '50%',
-  backgroundColor: '#f5f6fa',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: '0 auto',
+  width: 90,
+  height: 90,
+  borderRadius: "50%",
+  background: "linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: "0 auto",
   marginTop: theme.spacing(3),
   marginBottom: theme.spacing(2),
-}));
-
-const FeatureCardContent = styled(CardContent)(({ theme }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  paddingBottom: theme.spacing(2),
-  textAlign: 'right',
-  direction: 'rtl',
-}));
-
-const FeatureCardActions = styled(CardActions)(({ theme }) => ({
-  padding: theme.spacing(2, 3, 3),
-  justifyContent: 'center',
-}));
+  position: "relative",
+  boxShadow: "inset 0 2px 4px rgba(0,0,0,0.1)",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: -2,
+    left: -2,
+    right: -2,
+    bottom: -2,
+    borderRadius: "50%",
+    background: "linear-gradient(45deg, #ff9f43, #f39200, #ff9f43)",
+    zIndex: -1,
+    opacity: 0,
+    transition: "opacity 0.3s ease",
+  },
+  "&:hover::before": {
+    opacity: 1,
+  },
+}))
 
 const FeatureButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#ff9f43',
-  color: 'white',
-  borderRadius: theme.spacing(5),
-  padding: theme.spacing(1, 3),
-  '&:hover': {
-    backgroundColor: '#f39200',
+  background: "linear-gradient(45deg, #ff9f43 0%, #f39200 100%)",
+  color: "white",
+  borderRadius: theme.spacing(4),
+  padding: theme.spacing(1.5, 4),
+  fontWeight: "bold",
+  fontSize: "0.95rem",
+  textTransform: "none",
+  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  position: "relative",
+  overflow: "hidden",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: "-100%",
+    width: "100%",
+    height: "100%",
+    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+    transition: "left 0.5s",
   },
-}));
+  "&:hover::before": {
+    left: "100%",
+  },
+  "&:hover": {
+    background: "linear-gradient(45deg, #f39200 0%, #e67e22 100%)",
+    boxShadow: "0 8px 25px rgba(243, 146, 0, 0.4)",
+  },
+}))
 
-const FeatureTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 'bold',
-  marginBottom: theme.spacing(1.5),
-}));
+const TestimonialCard = styled(Card)(({ theme }) => ({
+  background: "linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)",
+  borderRadius: theme.spacing(2),
+  padding: theme.spacing(3),
+  height: "100%",
+  position: "relative",
+  border: "1px solid rgba(255,159,67,0.1)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-5px)",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.1)",
+    borderColor: "rgba(255,159,67,0.3)",
+  },
+}))
 
-// Star Icon Component
-const StarIcon = (props: any) => (
-  <SvgIcon {...props} viewBox="0 0 24 24">
-    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-  </SvgIcon>
-);
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  background: "linear-gradient(45deg, #2d3748 0%, #4a5568 100%)",
+  backgroundClip: "text",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  fontWeight: "bold",
+  marginBottom: theme.spacing(2),
+  position: "relative",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    bottom: -10,
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: 60,
+    height: 4,
+    background: "linear-gradient(45deg, #ff9f43, #f39200)",
+    borderRadius: 2,
+  },
+}))
 
-// Upload Icon Component
-const UploadIcon = (props: any) => (
-  <SvgIcon {...props} viewBox="0 0 24 24">
-    <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
-  </SvgIcon>
-);
+const FloatingElement = styled(Box)({
+  animation: `${float} 6s ease-in-out infinite`,
+})
 
-// AI Coloring Guide Icon Component
-const AiColoringIcon = (props: any) => (
-  <SvgIcon {...props} viewBox="0 0 24 24">
-    <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
-  </SvgIcon>
-);
+// Component
+export default function FeatureCardsWithTestimonials() {
+  const [mounted, setMounted] = useState(false)
 
-// Gallery Upload Icon Component
-const GalleryUploadIcon = (props: any) => (
-  <SvgIcon {...props} viewBox="0 0 24 24">
-    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5zM12 7c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm5-3H7v1h10V4z" />
-  </SvgIcon>
-);
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-// Share Icon Component
-const ShareIcon = (props: any) => (
-  <SvgIcon {...props} viewBox="0 0 24 24">
-    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92S19.61 16.08 18 16.08z" />
-  </SvgIcon>
-);
+  const navigate = useNavigate();
 
-// Feature Cards Component
-const FeatureCards: React.FC = () => {
-    const navigate = useNavigate();
+  const handleNavigation = (link: string) => {
+    if (link) {
+      navigate(link);
+    }
+  };
+  const features = [
+    {
+      icon: Star,
+      title: "דירוג ציורים",
+      description: "דרגו את הציורים האהובים עליכם, שתפו עם חברים ומשפחה וגלו את הציורים הפופולריים ביותר בקהילה",
+      buttonText: "לציורים הפופולריים",
+      color: "#ffc107",
+      gradient: "linear-gradient(45deg, #ffc107 0%, #ff9800 100%)",
+      link: "/popular",
+    },
+    {
+      icon: Upload,
+      title: "העלאת תמונה אישית",
+      description: "העלו תמונה משלכם והמערכת תהפוך אותה לדף צביעה מותאם אישית באמצעות טכנולוגיה מתקדמת",
+      buttonText: "העלאת תמונה",
+      color: "#2196f3",
+      gradient: "linear-gradient(45deg, #2196f3 0%, #1976d2 100%)",
+      link: "/coloring-page-converter",
+    },
+    {
+      icon: Palette,
+      title: "צביעה בהנחיית AI",
+      description: "בחרו ציור וצבעו אותו עם הדרכה חכמה של בינה מלאכותית שתנחה אתכם לתוצאות מרהיבות",
+      buttonText: "התחברות לצביעה עם AI",
+      color: "#e91e63",
+      gradient: "linear-gradient(45deg, #e91e63 0%, #c2185b 100%)",
+      link: "/login",
+    },
+    {
+      icon: ImageIcon,
+      title: "העלאת ציורים לגלריה",
+      description: "שתפו את הציורים המקוריים שיצרתם עם הקהילה, קבלו משוב והשראה ממשתמשים אחרים",
+      color: "#00bcd4",
+      gradient: "linear-gradient(45deg, #00bcd4 0%, #0097a7 100%)",
+    },
+    {
+      icon: Share,
+      title: "שיתוף ציורים",
+      description: "שתפו את היצירות הצבועות שלכם ברשתות החברתיות, שלחו לחברים או הדפיסו לקישוט הבית",
+      color: "#4caf50",
+      gradient: "linear-gradient(45deg, #4caf50 0%, #388e3c 100%)",
+    },
+  ]
 
-    const handlePopularDrawingsClick = () => {
-      navigate('/popular');
-    };
-    
-    const handleUploadImageClick = () => {
-      navigate('/coloring-page-converter');
-    };
-    
-    const handleAiColoringClick = () => {
-      navigate('/login');
-    };
-    
+  const testimonials = [
+    {
+      name: "שרה כהן",
+      age: 8,
+      text: "אני אוהבת לצבוע עם ה-AI! זה עוזר לי לעשות ציורים יפים מאוד",
+      rating: 5,
+      avatar: "ש",
+      location: "תל אביב",
+    },
+    {
+      name: "דוד לוי",
+      age: 35,
+      text: "האתר הזה מושלם לבילוי עם הילדים. הם נהנים והאיכות מעולה",
+      rating: 5,
+      avatar: "ד",
+      location: "חיפה",
+    },
+    {
+      name: "מיכל אברהם",
+      age: 28,
+      text: "העלאת התמונות האישיות זה גאוני! הפכתי תמונה של הכלב שלי לדף צביעה",
+      rating: 5,
+      avatar: "מ",
+      location: "ירושלים",
+    },
+    {
+      name: "יוסי רוזן",
+      age: 42,
+      text: "הגלריה מלאה ברעיונות מדהימים. הילדים שלי מתים על האתר הזה",
+      rating: 4,
+      avatar: "י",
+      location: "באר שבע",
+    },
+  ]
+
+  if (!mounted) {
+    return null
+  }
+
   return (
-    <Box sx={{ py: 8, backgroundColor: '#f5f7fa' }}>
+    <Box sx={{ py: 8, background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)", minHeight: "100vh" }} dir="rtl">
       <Container maxWidth="xl">
-        <Typography variant="h1" sx={{ textAlign: 'center', fontWeight: 'bold', mb: 5 }}>
-          מה אפשר לעשות ב-PaintArt?
-        </Typography>
-        
-        {/* First row - 3 cards */}
-        <Grid container spacing={4} sx={{ mb: 4 }}>
-          {/* Rating Pictures Card */}
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <IconContainer>
-                <StarIcon sx={{ color: '#ffc107', fontSize: 40 }} />
-              </IconContainer>
-              <FeatureCardContent>
-                <FeatureTitle variant="h5" sx={{ textAlign: 'left' }}>
-                  דירוג ציורים
-                </FeatureTitle>
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
-                  דרגו את הציורים האהובים עליכם, שתפו עם חברים ומשפחה וגלו את הציורים הפופולריים ביותר בקהילה
-                </Typography>
-              </FeatureCardContent>
-              <FeatureCardActions>
-                <FeatureButton onClick={handlePopularDrawingsClick}>
-                  לציורים הפופולריים
-                </FeatureButton>
-              </FeatureCardActions>
-            </FeatureCard>
-          </Grid>
+        {/* Header Section */}
+        <Box textAlign="center" mb={8}>
+          <SectionTitle variant="h2" as="h1">
+            מה אפשר לעשות ב-PaintArt?
+          </SectionTitle>
+          <Typography variant="h6" color="text.secondary" sx={{ mt: 2, maxWidth: 600, mx: "auto" }}>
+            גלו עולם של יצירתיות ואמנות דיגיטלית עם הכלים המתקדמים שלנו
+          </Typography>
+        </Box>
 
-          {/* Upload Your Own Image Card */}
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <IconContainer>
-                <UploadIcon sx={{ color: '#3f51b5', fontSize: 40 }} />
-              </IconContainer>
-              <FeatureCardContent>
-                <FeatureTitle variant="h5" sx={{ textAlign: 'left' }}>
-                  העלאת תמונה אישית
-                </FeatureTitle>
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
-                  העלו תמונה משלכם והמערכת תהפוך אותה לדף צביעה מותאם אישית באמצעות טכנולוגיה מתקדמת
-                </Typography>
-              </FeatureCardContent>
-              <FeatureCardActions>
-                <FeatureButton onClick={handleUploadImageClick}>
-                  העלאת תמונה
-                </FeatureButton>
-              </FeatureCardActions>
-            </FeatureCard>
-          </Grid>
+        {/* Features Section */}
+        <Grid container spacing={4} sx={{ mb: 8 }}>
+          {/* First row - 3 cards */}
+          {features.slice(0, 3).map((feature, index) => (
+            <Grid item xs={12} md={4} key={index}>
+              <Grow in={mounted} timeout={500 + index * 200}>
+                <FeatureCard>
+                  <FloatingElement>
+                    <IconContainer>
+                      <feature.icon
+                        className="feature-icon"
+                        sx={{
+                          fontSize: 45,
+                          color: feature.color,
+                          filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
+                        }}
+                      />
+                    </IconContainer>
+                  </FloatingElement>
 
-          {/* AI Coloring Guide Card */}
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <IconContainer>
-                <AiColoringIcon sx={{ color: '#e91e63', fontSize: 40 }} />
-              </IconContainer>
-              <FeatureCardContent>
-                <FeatureTitle variant="h5" sx={{ textAlign: 'left' }}>
-                  צביעה בהנחיית AI
-                </FeatureTitle>
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
-                  בחרו ציור וצבעו אותו עם הדרכה חכמה של בינה מלאכותית שתנחה אתכם לתוצאות מרהיבות
-                </Typography>
-              </FeatureCardContent>
-              <FeatureCardActions>
-                <FeatureButton onClick={handleAiColoringClick}>
-                  לצביעה עם AI יש להתחבר
-                </FeatureButton>
-              </FeatureCardActions>
-            </FeatureCard>
-          </Grid>
+                  <CardContent sx={{ flexGrow: 1, p: 3, textAlign: "right" }}>
+                    <Typography variant="h5" component="h3" sx={{ fontWeight: "bold", mb: 2, color: "#2d3748" }}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                      {feature.description}
+                    </Typography>
+                  </CardContent>
+
+                  {feature.buttonText && (
+                    <CardActions sx={{ p: 3, justifyContent: "center" }}>
+                      <FeatureButton 
+                        className="feature-button" 
+                        size="large"
+                        onClick={() => handleNavigation(feature.link)}
+                      >
+                        {feature.buttonText}
+                      </FeatureButton>
+                    </CardActions>
+                  )}
+                </FeatureCard>
+              </Grow>
+            </Grid>
+          ))}
         </Grid>
 
         {/* Second row - 2 cards centered */}
-        <Grid container spacing={4} justifyContent="center">
-          {/* Upload Drawings to Gallery Card */}
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <IconContainer>
-                <GalleryUploadIcon sx={{ color: '#00bcd4', fontSize: 40 }} />
-              </IconContainer>
-              <FeatureCardContent>
-                <FeatureTitle variant="h5" sx={{ textAlign: 'left' }}>
-                  העלאת ציורים לגלריה
-                </FeatureTitle>
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
-                  שתפו את הציורים המקוריים שיצרתם עם הקהילה, קבלו משוב והשראה ממשתמשים אחרים
-                </Typography>
-              </FeatureCardContent>
-            </FeatureCard>
-          </Grid>
+        <Grid container spacing={4} justifyContent="center" sx={{ mb: 10 }}>
+          {features.slice(3).map((feature, index) => (
+            <Grid item xs={12} md={4} key={index + 3}>
+              <Grow in={mounted} timeout={500 + (index + 3) * 200}>
+                <FeatureCard>
+                  <FloatingElement>
+                    <IconContainer>
+                      <feature.icon
+                        className="feature-icon"
+                        sx={{
+                          fontSize: 45,
+                          color: feature.color,
+                          filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
+                        }}
+                      />
+                    </IconContainer>
+                  </FloatingElement>
 
-          {/* Share Drawings Card */}
-          <Grid item xs={12} md={4}>
-            <FeatureCard>
-              <IconContainer>
-                <ShareIcon sx={{ color: '#4caf50', fontSize: 40 }} />
-              </IconContainer>
-              <FeatureCardContent>
-                <FeatureTitle variant="h5" sx={{ textAlign: 'left' }}>
-                  שיתוף ציורים
-                </FeatureTitle>
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left' }}>
-                  שתפו את היצירות הצבועות שלכם ברשתות החברתיות, שלחו לחברים או הדפיסו לקישוט הבית
-                </Typography>
-              </FeatureCardContent>
-            </FeatureCard>
-          </Grid>
+                  <CardContent sx={{ flexGrow: 1, p: 3, textAlign: "right" }}>
+                    <Typography variant="h5" component="h3" sx={{ fontWeight: "bold", mb: 2, color: "#2d3748" }}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                      {feature.description}
+                    </Typography>
+                  </CardContent>
+
+                  {feature.link && (
+                    <CardActions sx={{ p: 3, justifyContent: "center" }}>
+                      <FeatureButton 
+                        className="feature-button" 
+                        size="large"
+                        onClick={() => handleNavigation(feature.link)}
+                      >
+                        עבור לכלי
+                      </FeatureButton>
+                    </CardActions>
+                  )}
+                </FeatureCard>
+              </Grow>
+            </Grid>
+          ))}
         </Grid>
+
+        {/* Testimonials Section */}
+        <Box>
+          <SectionTitle variant="h3" textAlign="center" sx={{ mb: 6 }}>
+            מה המשתמשים שלנו אומרים
+          </SectionTitle>
+
+          <Grid container spacing={4}>
+            {testimonials.map((testimonial, index) => (
+              <Grid item xs={12} md={6} lg={3} key={index}>
+                <Grow in={mounted} timeout={1000 + index * 200}>
+                  <TestimonialCard>
+                    <Box display="flex" alignItems="center" mb={2}>
+                      <Avatar
+                        sx={{
+                          bgcolor: "#ff9f43",
+                          width: 50,
+                          height: 50,
+                          mr: 2,
+                          fontSize: "1.2rem",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {testimonial.avatar}
+                      </Avatar>
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: "bold", color: "#2d3748" }}>
+                          {testimonial.name}
+                        </Typography>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Chip
+                            label={`גיל ${testimonial.age}`}
+                            size="small"
+                            sx={{
+                              bgcolor: "rgba(255,159,67,0.1)",
+                              color: "#f39200",
+                              fontSize: "0.75rem",
+                            }}
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            {testimonial.location}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box position="relative" mb={2}>
+                      <FormatQuote
+                        sx={{
+                          position: "absolute",
+                          top: -10,
+                          right: -5,
+                          fontSize: 30,
+                          color: "rgba(255,159,67,0.3)",
+                          transform: "rotate(180deg)",
+                        }}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontStyle: "italic",
+                          lineHeight: 1.6,
+                          textAlign: "right",
+                          pr: 2,
+                        }}
+                      >
+                        "{testimonial.text}"
+                      </Typography>
+                    </Box>
+
+                    <Rating
+                      value={testimonial.rating}
+                      readOnly
+                      sx={{
+                        "& .MuiRating-iconFilled": {
+                          color: "#ffc107",
+                        },
+                      }}
+                    />
+                  </TestimonialCard>
+                </Grow>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Call to Action */}
+        <Box textAlign="center" mt={8}>
+          <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3, color: "#2d3748" }}>
+            מוכנים להתחיל ליצור?
+          </Typography>
+          <FeatureButton 
+            size="large" 
+            sx={{ px: 6, py: 2, fontSize: "1.1rem" }}
+            onClick={() => handleNavigation("/login")}
+          >
+            התחילו עכשיו בחינם
+          </FeatureButton>
+        </Box>
       </Container>
     </Box>
-  );
-};
-
-export default FeatureCards;
+  )
+}
