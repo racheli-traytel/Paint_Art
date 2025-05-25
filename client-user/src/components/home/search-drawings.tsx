@@ -18,10 +18,7 @@ const pulseGlow = keyframes`
   }
 `
 
-const shimmerEffect = keyframes`
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-`
+
 
 const rotateGradient = keyframes`
   0% { transform: rotate(0deg); }
