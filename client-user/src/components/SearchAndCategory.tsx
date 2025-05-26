@@ -77,8 +77,8 @@ import React, { useState } from 'react';
 import CategoriesButtons from './CategoriesButtons';
 import SearchDrawings from './SearchDrawing';
 import { Box, Container, Typography } from '@mui/material';
-import FeatureCards from './FeatureCards';
 import DrawingList from './DrawingList';
+import FeatureCards from './FeatureCards';
 
 const SearchAndCategory: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);

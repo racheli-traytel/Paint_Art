@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router'
-import SearchAndCategory from './components/SearchAndCategory'
 import PersonalArea from './components/PersonalArea'
 import PaintedDrawings from './components/PaintedDrawings'
 import Login from './components/Auth/Login'
@@ -12,6 +11,7 @@ import PaintArtDashboard from './components/PaintArtDashboard'
 import RecyclingBinPage from './components/RecyclingBinPage'
 import PaintCanvas from './components/paint-canvas/index'
 import { ColoringPageConverter } from './components/coloring-page-converter/index'
+import SearchAndCategory from './components/SearchAndCategory'
 export const Router = createBrowserRouter([
   {
     path: '/',

@@ -19,6 +19,7 @@
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
     "firebase": "^11.4.0",
+    "framer-motion": "^12.12.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
