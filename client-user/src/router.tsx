@@ -3,15 +3,14 @@ import PersonalArea from './components/PersonalArea'
 import PaintedDrawings from './components/PaintedDrawings'
 import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
-import ArtUploader from './components/Upload'
 import TopRatedDrawings from './components/Popular'
 import Layout from './components/Layout'
-import MyMostPopularDrawings from './components/MyMostPopularDrawings'
 import PaintArtDashboard from './components/PaintArtDashboard'
 import RecyclingBinPage from './components/RecyclingBinPage'
 import PaintCanvas from './components/paint-canvas/index'
 import { ColoringPageConverter } from './components/coloring-page-converter/index'
 import SearchAndCategory from './components/SearchAndCategory'
+import ArtUploader from './components/art-uploader/art-uploader'
 export const Router = createBrowserRouter([
   {
     path: '/',
@@ -33,7 +32,6 @@ export const Router = createBrowserRouter([
           { path: 'RecyclingBinPage', element:<RecyclingBinPage/> },
           { path: 'upload', element:<ArtUploader/> },
           { path: ':id', element:<PaintCanvas isPainted={true}/> },
-          { path: 'mypopular', element:<MyMostPopularDrawings/> },
 
         ]
       }

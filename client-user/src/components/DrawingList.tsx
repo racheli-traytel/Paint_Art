@@ -39,7 +39,7 @@ const DrawingList: React.FC<{ searchTerm: string; selectedCategory?: number | nu
   };
 
   const visibleDrawings = useMemo(() => {
-    return isDefaultView ? drawings.slice(0, 12) : drawings;
+    return isDefaultView ? drawings.slice(0, 4) : drawings;
   }, [drawings, isDefaultView]);
 
   if (status === 'loading') {

@@ -57,13 +57,15 @@ export class AddUserDialogComponent implements OnInit {
       
       const { firstName, lastName, email } = userGroup;
       
-      this.authService.register(firstName, lastName, email, password, "User").subscribe({
+      this.authService.register(firstName, lastName, email, password, "User").subscribe({        
         next: (response) => {
           console.log('User added successfully:', response);
           this.loading = false;
           this.dialogRef.close(true);
         },
         error: (err) => {
+          console.log(firstName, lastName, email, password, "User");
+          
           console.error('Error adding user', err);
           this.loading = false;
         }

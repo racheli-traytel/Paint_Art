@@ -31,16 +31,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
 
   const { messages, status } = useSelector((state: RootStore) => state.chat);
 
-  // נושאים מוצעים לשיחות על אמנות
   const suggestedTopics = [
-    "תרגיל ציור חדש",
-    "המלצות אמנים",
-    "טכניקות ציור",
-    "היסטוריה של אמנות",
-    "סגנונות ציור"
+    "תרגיל ציור חדש","המלצות אמנים", "טכניקות ציור","היסטוריה של אמנות", "סגנונות ציור"
   ];
 
-  // הרחבת הצ'אט לאחר השלמת האנימציה
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsExpanded(true);
@@ -48,7 +42,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // גלילה לתחתית כאשר ההודעות משתנות
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -65,10 +58,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
     dispatch(sendChatMessage(topic));
   };
 
-  // טיפול בסגירת הצ'אט
   const handleClose = () => {
     setIsExpanded(false);
-    // הוספת השהייה קצרה לאפשר לאנימציה להסתיים לפני סגירה מלאה
     setTimeout(() => {
       onClose();
     }, 300);
@@ -94,7 +85,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
     zIndex: 1000,
   }}
 >
-        {/* כותרת הצ'אט */}
         <Box 
           sx={{ 
             p: 2, 
@@ -121,7 +111,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
           </Box>
         </Box>
 
-        {/* הודעות הצ'אט */}
         <Fade in={isExpanded}>
           <Box 
             sx={{ 
@@ -222,7 +211,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
                     <Typography variant="body2">{msg.text}</Typography>
                   </Box>
                   
-                  {msg.sender !== 'user' && ( // הפוך לעברית
+                  {msg.sender !== 'user' && ( 
                     <Box 
                       sx={{ 
                         width: 28, 
@@ -275,7 +264,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
           </Box>
         </Fade>
 
-        {/* אזור הקלט */}
         <Box 
           sx={{ 
             display: 'flex', 

@@ -1,233 +1,385 @@
-import { Box, Card, CardContent, CardMedia, Divider, Grid, Typography, IconButton, Tooltip } from "@mui/material";
-import { ColorLens, Download, Star } from "@mui/icons-material";
-import Drawing from "../types/drawing";
-import RatingStars from "./RatingStars";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootStore } from "./redux/Store";
-import { useNavigate } from "react-router-dom";
-import ErrorModal from "./ErrorModal";
-import RatingModal from "./RatingModal";
-import axios from "axios";
-import { fetchTopRatedDrawings } from "./redux/DrawingSlice";
+"use client"
 
-const baseURL= import.meta.env.VITE_API_URL
+import { Box, Card, CardContent, CardMedia, Divider, Grid, Typography, IconButton, Tooltip } from "@mui/material"
+import { ColorLens, Download, Star } from "@mui/icons-material"
+import { motion } from "framer-motion"
+import type Drawing from "../types/drawing"
+import RatingStars from "./RatingStars"
+import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, RootStore } from "./redux/Store"
+import { useNavigate } from "react-router-dom"
+import ErrorModal from "./ErrorModal"
+import RatingModal from "./RatingModal"
+import axios from "axios"
+import { fetchTopRatedDrawings } from "./redux/DrawingSlice"
+
+// Motion components
+const MotionCard = motion(Card)
+const MotionBox = motion(Box)
+const MotionIconButton = motion(IconButton)
+const MotionTypography = motion(Typography)
+
+const baseURL = import.meta.env.VITE_API_URL
 
 const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
-    const { user } = useSelector((state: RootStore) => state.auth);
-    const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [_currentDrawingId, setCurrentDrawingId] = useState<number | null>(null);
-    const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootStore) => state.auth)
+  const navigate = useNavigate()
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [_currentDrawingId, setCurrentDrawingId] = useState<number | null>(null)
+  const dispatch = useDispatch<AppDispatch>()
 
-    // מצב עבור מודל הדירוג
-    const [isRatingModalOpen, setIsRatingModalOpen] = useState<boolean>(false);
-    const [ratingDrawingId, setRatingDrawingId] = useState<number | null>(null);
-    const [ratingDrawingTitle, setRatingDrawingTitle] = useState<string>('');
-    const handleColoringClick = (id: number) => {
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState<boolean>(false)
+  const [ratingDrawingId, setRatingDrawingId] = useState<number | null>(null)
+  const [ratingDrawingTitle, setRatingDrawingTitle] = useState<string>("")
+
+  const handleColoringClick = (id: number) => {
     if (user) {
-      navigate(`/${id}`);
+      navigate(`/${id}`)
     } else {
-      // שמירת ה-ID של הציור הנוכחי ופתיחת המודל
-      setCurrentDrawingId(id);
-      setIsModalOpen(true);
+      setCurrentDrawingId(id)
+      setIsModalOpen(true)
     }
-  };
-  const handleRatingClick = (id: number, title: string) => {
-    setRatingDrawingId(id);
-    setRatingDrawingTitle(title);
-    setIsRatingModalOpen(true);
-  };
+  }
 
+  const handleRatingClick = (id: number, title: string) => {
+    setRatingDrawingId(id)
+    setRatingDrawingTitle(title)
+    setIsRatingModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
-  // פונקציה לסגירת מודל הדירוג
   const handleCloseRatingModal = () => {
-  dispatch(fetchTopRatedDrawings(10)); // Call Redux function
-    setIsRatingModalOpen(false);
-  };
+    dispatch(fetchTopRatedDrawings(10))
+    setIsRatingModalOpen(false)
+  }
 
   const handleDownloadClick = async () => {
-   let fileName=drawing.name
-   const downloadResponse = await axios.get(`${baseURL}/upload/download-url/${fileName}`);
-   const fileUrl = downloadResponse.data;
+    const fileName = drawing.name
+    const downloadResponse = await axios.get(`${baseURL}/upload/download-url/${fileName}`)
+    const fileUrl = downloadResponse.data
 
-   console.log("fileUrl",fileUrl);
-   console.log("fileName",fileName);
-
-   
     try {
-      const response = await fetch(fileUrl);
+      const response = await fetch(fileUrl)
       if (!response.ok) {
-        throw new Error('Failed to fetch file');
+        throw new Error("Failed to fetch file")
       }
-      const blob = await response.blob();
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = fileName; // שם הקובץ שנשמור
-      link.click();
-    } catch (error)
- {
-      console.error('Error downloading the file:', error);
+      const blob = await response.blob()
+      const link = document.createElement("a")
+      link.href = URL.createObjectURL(blob)
+      link.download = fileName
+      link.click()
+    } catch (error) {
+      console.error("Error downloading the file:", error)
     }
-  };
+  }
 
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 30,
+      scale: 0.9,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        duration: 0.6,
+      },
+    },
+    hover: {
+      y: -8,
+      scale: 1.02,
+      boxShadow: "0 15px 30px rgba(0,0,0,0.2)",
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      },
+    },
+  }
 
+  const imageVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 1.1,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        delay: 0.2,
+      },
+    },
+  }
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.3,
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  const actionButtonVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 10,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 200,
+        damping: 15,
+      },
+    },
+    hover: {
+      scale: 1.1,
+      y: -2,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      },
+    },
+    tap: {
+      scale: 0.95,
+    },
+  }
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} key={drawing.id}>
-      <Card 
-        elevation={3} 
-        sx={{ 
-          height: '100%', 
-          display: 'flex', 
-          flexDirection: 'column',
-          transition: 'transform 0.2s, box-shadow 0.2s',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: '0 12px 20px rgba(0,0,0,0.15)',
-          }
+      <MotionCard
+        elevation={3}
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "12px",
+          overflow: "hidden",
+          position: "relative",
+          background: "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)",
         }}
+        variants={cardVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.2 }}
+        whileHover="hover"
       >
-        <Box sx={{ position: 'relative', paddingTop: '75%' }}>
-          <CardMedia
-            component="img"
-            image={drawing.imageUrl}
-            alt={drawing.title}
-            sx={{ 
-              position: 'absolute',
+        {/* Animated border effect */}
+        <motion.div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "3px",
+            background: "linear-gradient(90deg, #6a5acd, #5a4abf, #6a5acd)",
+            backgroundSize: "200% 100%",
+          }}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ amount: 0.3 }}
+          animate={{
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+          }}
+          transition={{
+            delay: 0.4, duration: 0.8,
+            backgroundPosition: {
+              duration: 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            },
+          }}
+        />
+
+        <MotionBox sx={{ position: "relative", paddingTop: "75%" }}>
+          <motion.div
+            style={{
+              position: "absolute",
               top: 0,
               left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              backgroundColor: '#f8f8f8'
+              width: "100%",
+              height: "100%",
             }}
-          />
-        </Box>
-        
-        <CardContent sx={{ flexGrow: 1, direction: 'rtl' }}>
-          <Typography gutterBottom variant="h6" component="h2" sx={{ 
-            fontWeight: 'bold',
-            color: '#3d2c8d' 
-          }}>
-            {drawing.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            {drawing.description}
-          </Typography>
-          <Divider sx={{ my: 1 }} />
-          
-          {/* Rating display */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <RatingStars rating={drawing.avgRating} count={drawing.countRating} />
-            <Typography variant="body2" sx={{ ml: 1, fontWeight: 'medium' }}>
-              {drawing.avgRating.toFixed(1)}
-            </Typography>
-          </Box>
-          
-          {/* Action buttons with text labels alongside and click handlers */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              mt: 2,
-              direction: 'rtl'
-            }}
+            variants={imageVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ amount: 0.3 }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title="צביעה" arrow placement="top">
-                <IconButton 
-                onClick={()=>handleColoringClick(drawing.id)}
-            
-                  sx={{ 
-                    bgcolor: '#f0e6ff', 
-                    '&:hover': { bgcolor: '#d9c2ff' },
-                    padding: '12px'
-                  }}
-                >
-                  <ColorLens sx={{ fontSize: 28, color: '#3d2c8d' }} />
-                </IconButton>
-              </Tooltip>
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  fontWeight: 'medium',
-                  cursor: 'pointer'
-                }}
-                onClick={()=>handleColoringClick(drawing.id)}
-              >
-                צביעה
-              </Typography>
-            </Box>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title="הורדה" arrow placement="top">
-                <IconButton 
-                  onClick={handleDownloadClick}
-                  sx={{ 
-                    bgcolor: '#e6f7ff', 
-                    '&:hover': { bgcolor: '#bfe6ff' },
-                    padding: '12px'
-                  }}
-                >
-                  <Download sx={{ fontSize: 28, color: '#0277bd' }} />
-                </IconButton>
-              </Tooltip>
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  fontWeight: 'medium',
-                  cursor: 'pointer'
-                }}
-                onClick={handleDownloadClick}
-              >
-                הורדה
-              </Typography>
-            </Box>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title="דרוג" arrow placement="top">
-                <IconButton 
-                onClick={()=>handleRatingClick(drawing.id, drawing.title)}
-                sx={{ 
-                    bgcolor: '#fff8e1', 
-                    '&:hover': { bgcolor: '#ffecb3' },
-                    padding: '12px'
-                  }}
-                >
-                  <Star sx={{ fontSize: 28, color: '#ff9800' }} />
-                </IconButton>
-              </Tooltip>
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  fontWeight: 'medium',
-                  cursor: 'pointer'
-                }}
-                onClick={()=>handleRatingClick(drawing.id, drawing.title)}
-              >
-                דרוג
-              </Typography>
-            </Box>
-          </Box>
+            <CardMedia
+              component="img"
+              image={drawing.imageUrl}
+              alt={drawing.title}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                backgroundColor: "#f8f8f8",
+              }}
+            />
+          </motion.div>
+        </MotionBox>
 
-          {/* Rating dialog would be added here */}
-          {/* {ratingDialogOpen && <RatingDialog drawing={drawing} onClose={() => setRatingDialogOpen(false)} />} */}
-        </CardContent>
-      </Card>
-        {/* מודל השגיאה */}
-        <ErrorModal 
-        open={isModalOpen} 
-        onClose={handleCloseModal} 
-      />
-      
-      {/* מודל הדירוג */}
+        <motion.div variants={contentVariants} initial="hidden" whileInView="visible" viewport={{ amount: 0.3 }}>
+          <CardContent sx={{ flexGrow: 1, direction: "rtl" }}>
+            <MotionTypography
+              gutterBottom
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                color: "#3d2c8d",
+              }}
+              variants={contentVariants}
+            >
+              {drawing.title}
+            </MotionTypography>
+
+            <MotionTypography variant="body2" color="text.secondary" sx={{ mb: 2 }} variants={contentVariants}>
+              {drawing.description}
+            </MotionTypography>
+
+            <Divider sx={{ my: 1 }} />
+
+            <MotionBox sx={{ display: "flex", alignItems: "center", mb: 2 }} variants={contentVariants}>
+              <RatingStars rating={drawing.avgRating} count={drawing.countRating} />
+              <Typography variant="body2" sx={{ ml: 1, fontWeight: "medium" }}>
+                {drawing.avgRating.toFixed(1)}
+              </Typography>
+            </MotionBox>
+
+            <MotionBox
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mt: 2,
+                direction: "rtl",
+              }}
+              variants={contentVariants}
+            >
+              <MotionBox sx={{ display: "flex", alignItems: "center", gap: 1 }} variants={actionButtonVariants}>
+                <Tooltip title="צביעה" arrow placement="top">
+                  <MotionIconButton
+                    onClick={() => handleColoringClick(drawing.id)}
+                    sx={{
+                      bgcolor: "#f0e6ff",
+                      "&:hover": { bgcolor: "#d9c2ff" },
+                      padding: "12px",
+                    }}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    <ColorLens sx={{ fontSize: 28, color: "#3d2c8d" }} />
+                  </MotionIconButton>
+                </Tooltip>
+                <MotionTypography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "medium",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleColoringClick(drawing.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  צביעה
+                </MotionTypography>
+              </MotionBox>
+
+              <MotionBox sx={{ display: "flex", alignItems: "center", gap: 1 }} variants={actionButtonVariants}>
+                <Tooltip title="הורדה" arrow placement="top">
+                  <MotionIconButton
+                    onClick={handleDownloadClick}
+                    sx={{
+                      bgcolor: "#e6f7ff",
+                      "&:hover": { bgcolor: "#bfe6ff" },
+                      padding: "12px",
+                    }}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    <Download sx={{ fontSize: 28, color: "#0277bd" }} />
+                  </MotionIconButton>
+                </Tooltip>
+                <MotionTypography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "medium",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleDownloadClick}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  הורדה
+                </MotionTypography>
+              </MotionBox>
+
+              <MotionBox sx={{ display: "flex", alignItems: "center", gap: 1 }} variants={actionButtonVariants}>
+                <Tooltip title="דרוג" arrow placement="top">
+                  <MotionIconButton
+                    onClick={() => handleRatingClick(drawing.id, drawing.title)}
+                    sx={{
+                      bgcolor: "#fff8e1",
+                      "&:hover": { bgcolor: "#ffecb3" },
+                      padding: "12px",
+                    }}
+                    whileHover="hover"
+                    whileTap="tap"
+                  >
+                    <Star sx={{ fontSize: 28, color: "#ff9800" }} />
+                  </MotionIconButton>
+                </Tooltip>
+                <MotionTypography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "medium",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleRatingClick(drawing.id, drawing.title)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  דרוג
+                </MotionTypography>
+              </MotionBox>
+            </MotionBox>
+          </CardContent>
+        </motion.div>
+
+        {/* Hover overlay effect */}
+        <motion.div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(45deg, rgba(106, 90, 205, 0.1), transparent)",
+            opacity: 0,
+            pointerEvents: "none",
+          }}
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+      </MotionCard>
+
+      <ErrorModal open={isModalOpen} onClose={handleCloseModal} />
+
       {ratingDrawingId && (
         <RatingModal
           open={isRatingModalOpen}
@@ -237,8 +389,6 @@ const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
         />
       )}
     </Grid>
-    
-  );
-};
-
-export default DrawingCard;
+  )
+}
+export default DrawingCard

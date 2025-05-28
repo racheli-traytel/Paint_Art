@@ -26,7 +26,7 @@ import {
   WhiteContainer,
 } from "./Designs/DashBoard"
 import { useNavigate } from "react-router-dom"
-import DrawingShareDialog from "./drawing-share-dialog"
+import DrawingShareDialog from "./drawing-share-dialog/drawing-share-dialog"
 
 const PersonalDashboard = () => {
   const user = JSON.parse(

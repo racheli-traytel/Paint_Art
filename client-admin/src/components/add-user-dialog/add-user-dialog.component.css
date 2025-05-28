@@ -8,6 +8,10 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     background-color: #fff;
   }
+  .add-user-dialog {
+    direction: rtl;
+    text-align: right;
+  }
   
   /* כותרת הדיאלוג */
   .add-user-dialog h2 {

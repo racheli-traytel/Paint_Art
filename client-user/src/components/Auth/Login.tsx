@@ -252,7 +252,7 @@ const LoginPage: React.FC = () => {
     const response = await dispatch(login(formData));
   
     if (login.fulfilled.match(response)) {
-      navigate('/');
+      navigate('/personal-area');
     }
   };
   
