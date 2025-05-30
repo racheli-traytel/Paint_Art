@@ -7,9 +7,8 @@ import CategoriesButtons from "./CategoriesButtons"
 import SearchDrawings from "./SearchDrawing"
 import { Box, Container, Typography } from "@mui/material"
 import DrawingList from "./DrawingList"
-import FeatureCards from "./FeatureCards"
+import FeatureCardsWithTestimonials from "./home/feature-cards-with-testimonials"
 
-// Motion components
 const MotionBox = motion(Box)
 const MotionContainer = motion(Container)
 const MotionTypography = motion(Typography)
@@ -350,7 +349,7 @@ const SearchAndCategory: React.FC = () => {
           <DrawingList selectedCategory={selectedCategory} searchTerm={searchTerm} />
         </motion.div>
         <motion.div variants={contentVariants}>
-          <FeatureCards />
+          <FeatureCardsWithTestimonials />
         </motion.div>
       </MotionBox>
     </>

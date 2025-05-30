@@ -23,32 +23,23 @@ namespace PlayArt.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]
         public ActionResult Get()
         {
             return Ok(_userService.GetList());
         }
 
         [HttpGet("growth")]
-        //[Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<IEnumerable<UserGrowthDTO>>> GetUserGrowthByMonth()
         {
             var userGrowthData = _userService.GetUserGrowthByMonth();
             return Ok(userGrowthData);
         }
-        //[HttpPost]
-        //public async Task<ActionResult> Post([FromBody] UserPostModel user)
-        //{
-        //    if (user == null) return BadRequest();
-        //    var userdto = _mapper.Map<UserDTO>(user);
-        //    var result = await _userService.AddUserAsync(userdto);
-        //    if (result == null)
-        //        return BadRequest("user already exist");
-        //    return Ok(result);
-        //}
+
 
         [HttpGet("{id}")]
-        //[Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]
         public ActionResult<User> GetId(int id)
         {
             if (id < 0) return BadRequest();
@@ -60,7 +51,7 @@ namespace PlayArt.Controllers
        
 
         [HttpPut("{id}")]
-        [Authorize(Policy = "AdminOnly")]
+        //[Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> Put(int id, [FromBody] UserPostModel user)
         {
             if (id < 0|| user==null) return BadRequest();
